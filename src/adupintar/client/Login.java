@@ -188,21 +188,21 @@ public class Login extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private boolean validate_login(String username,String password) {
-    try{           
-        Class.forName("com.mysql.jdbc.Driver");  // MySQL database connection
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");     
-        PreparedStatement pst = (PreparedStatement) conn.prepareStatement("Select * from user where username=? and password=?");
-        pst.setString(1, username); 
-        pst.setString(2, password);
-        ResultSet rs = pst.executeQuery();                        
-        if(rs.next())            
-            return true;    
-        else
-            return false;            
+        try{           
+            Class.forName("com.mysql.jdbc.Driver");  // MySQL database connection
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");     
+            PreparedStatement pst = (PreparedStatement) conn.prepareStatement("Select * from user where username=? and password=?");
+            pst.setString(1, username); 
+            pst.setString(2, password);
+            ResultSet rs = pst.executeQuery();                        
+            if(rs.next())            
+                return true;    
+            else
+                return false;            
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }       
     }
-    catch(Exception e){
-        e.printStackTrace();
-        return false;
-    }       
-}
 }

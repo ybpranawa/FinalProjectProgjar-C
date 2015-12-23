@@ -5,7 +5,12 @@
  */
 package adupintar.client;
 
+import com.mysql.jdbc.PreparedStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -41,6 +46,7 @@ public class Signup extends javax.swing.JFrame {
         txtBoxUsername = new javax.swing.JTextField();
         txtBoxPassword = new javax.swing.JTextField();
         btnSignUp = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -58,6 +64,13 @@ public class Signup extends javax.swing.JFrame {
         jLabel4.setText("Password");
 
         btnSignUp.setText("Sign Up");
+        btnSignUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSignUpActionPerformed(evt);
+            }
+        });
+
+        btnCancel.setText("Cancel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -67,8 +80,11 @@ public class Signup extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnSignUp)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btnCancel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                            .addComponent(btnSignUp))
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel2)
@@ -99,7 +115,9 @@ public class Signup extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(txtBoxPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(btnSignUp)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSignUp)
+                    .addComponent(btnCancel))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
@@ -114,6 +132,41 @@ public class Signup extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosed
 
+    private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
+        // TODO add your handling code here:
+        
+        if(txtBoxUsername.getText().length()==0)
+            JOptionPane.showMessageDialog(null, "Username harus diisi!");
+        else if(txtBoxName.getText().length()==0)
+            JOptionPane.showMessageDialog(null, "Nama harus diisi!");
+        else if(txtBoxPassword.getText().length()==0)
+            JOptionPane.showMessageDialog(null, "Password harus diisi!");
+        else
+        {
+            String username=txtBoxUsername.getText();
+            String name=txtBoxName.getText();
+            String password=txtBoxPassword.getText();
+            if (cekusername(username))
+            {
+                JOptionPane.showMessageDialog(null, "username sudah ada!");
+            }
+            else
+            {
+                if(signup(username,name,password))
+                {
+                    /*Login loginForm = new Login(this);
+                    loginForm.showForm();
+                    this.setVisible(false);*/
+                    JOptionPane.showMessageDialog(null, "Signup Success!");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Signup Failed!");
+                }
+            }
+        }
+    }//GEN-LAST:event_btnSignUpActionPerformed
+
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
@@ -125,6 +178,7 @@ public class Signup extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSignUp;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -134,4 +188,42 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JTextField txtBoxPassword;
     private javax.swing.JTextField txtBoxUsername;
     // End of variables declaration//GEN-END:variables
+
+    private boolean signup(String username, String name, String password) {
+        try{           
+            Class.forName("com.mysql.jdbc.Driver");  // MySQL database connection
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");     
+            PreparedStatement pst = (PreparedStatement) conn.prepareStatement("INSERT INTO user VALUES(?,?,?)");
+            pst.setString(1, username); 
+            pst.setString(2, name);
+            pst.setString(3, password);
+            ResultSet rs = pst.executeQuery();                                 
+            if(rs.next())            
+                return true;    
+            else
+                return true;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return true;
+        }
+    }
+
+    private boolean cekusername(String username) {
+        try{           
+            Class.forName("com.mysql.jdbc.Driver");  // MySQL database connection
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");     
+            PreparedStatement pst = (PreparedStatement) conn.prepareStatement("SELECT * FROM user WHERE username=?");
+            pst.setString(1, username); 
+            ResultSet rs = pst.executeQuery();                        
+            if(rs.next())            
+                return true;    
+            else
+                return false;            
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
