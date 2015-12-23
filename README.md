@@ -1,4 +1,4 @@
-# FinalProjectProgjar-C  
+# FinalProjectProgjar-C (client)
 
 Kelompok  
 Fendy  
