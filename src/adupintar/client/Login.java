@@ -5,7 +5,16 @@
  */
 package adupintar.client;
 
+import com.mysql.jdbc.PreparedStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.spi.DirStateFactory.Result;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -129,9 +138,25 @@ public class Login extends javax.swing.JFrame {
         //check user
         
         //for time being always true :)
-        Play playForm = new Play(this);
-        playForm.showForm();
-        this.setVisible(false);
+        if (txtBoxUsername.getText().length()==0)
+            JOptionPane.showMessageDialog(null, "Username wajib diisi!");
+        else if(txtBoxPassword.getPassword().length==0)
+            JOptionPane.showMessageDialog(null, "Password wajib diisi!");
+        else{
+            String username=txtBoxUsername.getText();
+            char[] password=txtBoxPassword.getPassword();
+            String pwd=String.copyValueOf(password);
+            if(validate_login(username,pwd))
+            {
+                Play playForm = new Play(this);
+                playForm.showForm();
+                this.setVisible(false);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Login salah!");
+            }
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -161,4 +186,23 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtBoxPassword;
     private javax.swing.JTextField txtBoxUsername;
     // End of variables declaration//GEN-END:variables
+
+    private boolean validate_login(String username,String password) {
+    try{           
+        Class.forName("com.mysql.jdbc.Driver");  // MySQL database connection
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");     
+        PreparedStatement pst = (PreparedStatement) conn.prepareStatement("Select * from user where username=? and password=?");
+        pst.setString(1, username); 
+        pst.setString(2, password);
+        ResultSet rs = pst.executeQuery();                        
+        if(rs.next())            
+            return true;    
+        else
+            return false;            
+    }
+    catch(Exception e){
+        e.printStackTrace();
+        return false;
+    }       
+}
 }
