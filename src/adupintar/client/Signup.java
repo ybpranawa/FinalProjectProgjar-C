@@ -9,6 +9,7 @@ import com.mysql.jdbc.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -71,6 +72,11 @@ public class Signup extends javax.swing.JFrame {
         });
 
         btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -146,26 +152,26 @@ public class Signup extends javax.swing.JFrame {
             String username=txtBoxUsername.getText();
             String name=txtBoxName.getText();
             String password=txtBoxPassword.getText();
-            if (cekusername(username))
+            if(signup(username,name,password))
             {
-                JOptionPane.showMessageDialog(null, "username sudah ada!");
+                /*Login loginForm = new Login(this);
+                loginForm.showForm();
+                this.setVisible(false);*/
+                JOptionPane.showMessageDialog(null, "Signup Success!");
             }
             else
             {
-                if(signup(username,name,password))
-                {
-                    /*Login loginForm = new Login(this);
-                    loginForm.showForm();
-                    this.setVisible(false);*/
-                    JOptionPane.showMessageDialog(null, "Signup Success!");
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "Signup Failed!");
-                }
+                JOptionPane.showMessageDialog(null, "Signup Failed!");
             }
         }
     }//GEN-LAST:event_btnSignUpActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+        Login loginForm = new Login(this);
+        loginForm.showForm();
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -191,28 +197,41 @@ public class Signup extends javax.swing.JFrame {
 
     private boolean signup(String username, String name, String password) {
         try{           
-            Class.forName("com.mysql.jdbc.Driver");  // MySQL database connection
+            Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");     
-            PreparedStatement pst = (PreparedStatement) conn.prepareStatement("INSERT INTO user VALUES(?,?,?)");
+            PreparedStatement pst = (PreparedStatement) conn.prepareStatement("SELECT * FROM user WHERE username=?");
             pst.setString(1, username); 
-            pst.setString(2, name);
-            pst.setString(3, password);
-            ResultSet rs = pst.executeQuery();                                 
+            ResultSet rs = pst.executeQuery();                        
             if(rs.next())            
-                return true;    
+                JOptionPane.showMessageDialog(null, "Username Sudah Dipakai!");
             else
-                return true;
+            {
+                pst = (PreparedStatement) conn.prepareStatement("INSERT INTO user VALUES (?,?,?)");
+                pst.setString(1, username); 
+                pst.setString(2, name);
+                pst.setString(3, password);
+                int n=pst.executeUpdate();
+                if(n>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         catch(Exception e){
             e.printStackTrace();
-            return true;
+            return false;
         }
     }
 
-    private boolean cekusername(String username) {
+    /*private boolean cekusername(String username) {
         try{           
-            Class.forName("com.mysql.jdbc.Driver");  // MySQL database connection
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");     
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");
             PreparedStatement pst = (PreparedStatement) conn.prepareStatement("SELECT * FROM user WHERE username=?");
             pst.setString(1, username); 
             ResultSet rs = pst.executeQuery();                        
@@ -225,5 +244,5 @@ public class Signup extends javax.swing.JFrame {
             e.printStackTrace();
             return false;
         }
-    }
+    }*/
 }
