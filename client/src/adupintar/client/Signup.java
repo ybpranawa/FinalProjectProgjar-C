@@ -6,12 +6,21 @@
 package adupintar.client;
 
 import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.StringUtils;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import object.Response;
+import object.SignUpData;
 
 /**
  *
@@ -141,36 +150,46 @@ public class Signup extends javax.swing.JFrame {
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
         // TODO add your handling code here:
         
-        if(txtBoxUsername.getText().length()==0)
+        String username=txtBoxUsername.getText();
+        String name=txtBoxName.getText();
+        String password=txtBoxPassword.getText();
+        if(StringUtils.isEmptyOrWhitespaceOnly(username))
             JOptionPane.showMessageDialog(null, "Username harus diisi!");
-        else if(txtBoxName.getText().length()==0)
+        else if(StringUtils.isEmptyOrWhitespaceOnly(name))
             JOptionPane.showMessageDialog(null, "Nama harus diisi!");
-        else if(txtBoxPassword.getText().length()==0)
+        else if(StringUtils.isEmptyOrWhitespaceOnly(password))
             JOptionPane.showMessageDialog(null, "Password harus diisi!");
         else
         {
-            String username=txtBoxUsername.getText();
-            String name=txtBoxName.getText();
-            String password=txtBoxPassword.getText();
-            if(signup(username,name,password))
-            {
-                /*Login loginForm = new Login(this);
-                loginForm.showForm();
-                this.setVisible(false);*/
-                JOptionPane.showMessageDialog(null, "Signup Success!");
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Signup Failed!");
+            try {
+                SignUpData data = new SignUpData(username, password, name);
+                
+                ServerConnection connection = ServerConnection.getInstance();
+                ObjectOutputStream oos = connection.getOos();
+                oos.writeObject(data);
+                oos.reset();
+                
+                
+                ObjectInputStream ois = connection.getOis();
+                Response response = (Response) ois.readObject();
+                
+                if (response.getResponseCode() == 200) {
+                    JOptionPane.showMessageDialog(null, "Signup Success!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Signup Failed! " + response.getResponseString());
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnSignUpActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
-        Login loginForm = new Login(this);
-        loginForm.showForm();
-        this.setVisible(false);
+        this.parent.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     public void showForm() {
@@ -195,54 +214,4 @@ public class Signup extends javax.swing.JFrame {
     private javax.swing.JTextField txtBoxUsername;
     // End of variables declaration//GEN-END:variables
 
-    private boolean signup(String username, String name, String password) {
-        try{           
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");     
-            PreparedStatement pst = (PreparedStatement) conn.prepareStatement("SELECT * FROM user WHERE username=?");
-            pst.setString(1, username); 
-            ResultSet rs = pst.executeQuery();                        
-            if(rs.next())            
-                JOptionPane.showMessageDialog(null, "Username Sudah Dipakai!");
-            else
-            {
-                pst = (PreparedStatement) conn.prepareStatement("INSERT INTO user VALUES (?,?,?)");
-                pst.setString(1, username); 
-                pst.setString(2, name);
-                pst.setString(3, password);
-                int n=pst.executeUpdate();
-                if(n>0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /*private boolean cekusername(String username) {
-        try{           
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/adupintar?" + "user=root&password=");
-            PreparedStatement pst = (PreparedStatement) conn.prepareStatement("SELECT * FROM user WHERE username=?");
-            pst.setString(1, username); 
-            ResultSet rs = pst.executeQuery();                        
-            if(rs.next())            
-                return true;    
-            else
-                return false;            
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }*/
 }

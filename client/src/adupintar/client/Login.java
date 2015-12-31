@@ -6,6 +6,7 @@
 package adupintar.client;
 
 import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.StringUtils;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -133,19 +134,14 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSignupActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        //TODO:
-        //connect DB
-        //check user
-        
-        //for time being always true :)
-        if (txtBoxUsername.getText().length()==0)
+        String username=txtBoxUsername.getText();
+        char[] password=txtBoxPassword.getPassword();
+        String pwd=String.copyValueOf(password);
+        if (StringUtils.isEmptyOrWhitespaceOnly(username))
             JOptionPane.showMessageDialog(null, "Username wajib diisi!");
-        else if(txtBoxPassword.getPassword().length==0)
+        else if(StringUtils.isEmptyOrWhitespaceOnly(pwd))
             JOptionPane.showMessageDialog(null, "Password wajib diisi!");
         else{
-            String username=txtBoxUsername.getText();
-            char[] password=txtBoxPassword.getPassword();
-            String pwd=String.copyValueOf(password);
             if(validate_login(username,pwd))
             {
                 Play playForm = new Play(this);

@@ -1,1 +1,7 @@
 /build/
+/client/build/
+/objectSerialization/nbproject/private/
+/objectSerialization/build/
+/objectSerialization/dist/
+/server/build/
+/server/dist/
