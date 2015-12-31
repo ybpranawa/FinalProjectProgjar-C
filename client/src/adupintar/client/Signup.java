@@ -169,7 +169,6 @@ public class Signup extends javax.swing.JFrame {
                 oos.writeObject(data);
                 oos.reset();
                 
-                
                 ObjectInputStream ois = connection.getOis();
                 Response response = (Response) ois.readObject();
                 

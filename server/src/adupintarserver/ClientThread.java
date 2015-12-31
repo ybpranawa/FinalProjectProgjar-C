@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import object.LogInData;
 import object.Response;
 import object.SignUpData;
 
@@ -43,32 +44,9 @@ public class ClientThread implements Runnable {
             try {
                 Object obj = this.ois.readObject();
                 if (obj instanceof SignUpData) {
-                    SignUpData data = (SignUpData) obj;
-                    String username = data.getUsername();
-                    String password = data.getPassword();
-                    String name = data.getName();
-                    
-                    DbConnect db = DbConnect.getDbCon();
-                    ArrayList<String> args = new ArrayList<>();
-                    args.add(username);
-                    ResultSet rs = db.query("SELECT * FROM user WHERE username=?", args);
-                    
-                    int responseCode = 500;
-                    String responseString = null;
-                    if (rs.next()) {
-                        responseCode = 301;
-                        responseString = "Username Sudah Dipakai!";
-                    } else {
-                        args.add(name);
-                        args.add(password);
-                        int stat = db.insert("INSERT INTO user VALUES (?,?,?)", args);
-                        if (stat > 0) {
-                            responseCode = 200;
-                            responseString = "Ok";
-                        }
-                    }
-                    
-                    this.oos.writeObject(new Response(responseCode, responseString));
+                    this.SignUp((SignUpData) obj);
+                } else if (obj instanceof LogInData) {
+                    this.LogIn((LogInData) obj);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,4 +58,54 @@ public class ClientThread implements Runnable {
         }
     }
     
+    
+    private void SignUp(SignUpData data) throws IOException, SQLException {
+        String username = data.getUsername();
+        String password = data.getPassword();
+        String name = data.getName();
+
+        DbConnect db = DbConnect.getDbCon();
+        ArrayList<String> args = new ArrayList<>();
+        args.add(username);
+        ResultSet rs = db.query("SELECT * FROM user WHERE username=?", args);
+
+        int responseCode = 500;
+        String responseString = null;
+        if (rs.next()) {
+            responseCode = 301;
+            responseString = "Username Sudah Dipakai!";
+        } else {
+            args.add(name);
+            args.add(password);
+            int stat = db.insert("INSERT INTO user VALUES (?,?,?)", args);
+            if (stat > 0) {
+                responseCode = 200;
+                responseString = "Ok";
+            }
+        }
+
+        this.oos.writeObject(new Response(responseCode, responseString));
+    }
+
+    private void LogIn(LogInData data) throws SQLException, IOException {
+        String username = data.getUsername();
+        String password = data.getPassword();
+
+        DbConnect db = DbConnect.getDbCon();
+        ArrayList<String> args = new ArrayList<>();
+        args.add(username);
+        ResultSet rs = db.query("SELECT * FROM user WHERE username=?", args);
+
+        int responseCode = 500;
+        String responseString = null;
+        if (rs.next()) {
+            responseCode = 200;
+            responseString = "Ok";
+        } else {
+            responseCode = 300;
+            responseString = "Invalid credentials!";
+        }
+        
+        this.oos.writeObject(new Response(responseCode, responseString));
+    }
 }

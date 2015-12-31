@@ -7,6 +7,9 @@ package adupintar.client;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.StringUtils;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,6 +19,8 @@ import java.util.logging.Logger;
 import javax.naming.spi.DirStateFactory.Result;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import object.LogInData;
+import object.Response;
 
 /**
  *
@@ -142,15 +147,39 @@ public class Login extends javax.swing.JFrame {
         else if(StringUtils.isEmptyOrWhitespaceOnly(pwd))
             JOptionPane.showMessageDialog(null, "Password wajib diisi!");
         else{
-            if(validate_login(username,pwd))
-            {
-                Play playForm = new Play(this);
-                playForm.showForm();
-                this.setVisible(false);
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Login salah!");
+            try {
+                LogInData data = new LogInData(username, pwd);
+                ServerConnection connection = ServerConnection.getInstance();
+                ObjectOutputStream oos = connection.getOos();
+                oos.writeObject(data);
+                oos.reset();
+                
+                ObjectInputStream ois = connection.getOis();
+                Response response = (Response) ois.readObject();
+                
+                if (response.getResponseCode() == 200) {
+                    Play playForm = new Play(this);
+                    playForm.showForm();
+                    this.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login salah!");
+                }
+                /*
+                if(validate_login(username,pwd))
+                {
+                    Play playForm = new Play(this);
+                    playForm.showForm();
+                    this.setVisible(false);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Login salah!");
+                }
+                */
+            } catch (IOException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
