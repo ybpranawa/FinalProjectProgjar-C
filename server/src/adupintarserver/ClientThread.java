@@ -6,19 +6,16 @@
 package adupintarserver;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import object.LogInData;
-import object.Response;
-import object.SignUpData;
+import object.AddFriendData;
+import object.*;
 
 /**
  *
@@ -29,6 +26,7 @@ public class ClientThread implements Runnable {
     private Socket socket;
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
+    private Credentials me = null;
     private boolean connectionOk = false;
     
     ClientThread(Socket socket) throws IOException{
@@ -47,9 +45,13 @@ public class ClientThread implements Runnable {
                     this.SignUp((SignUpData) obj);
                 } else if (obj instanceof LogInData) {
                     this.LogIn((LogInData) obj);
+                } else if (obj instanceof AddFriendData) {
+                    this.AddFriend((AddFriendData) obj);
                 }
             } catch (IOException ex) {
-                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                break;
+                //System.out.println("lala");
+                //Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -57,7 +59,6 @@ public class ClientThread implements Runnable {
             }
         }
     }
-    
     
     private void SignUp(SignUpData data) throws IOException, SQLException {
         String username = data.getUsername();
@@ -67,7 +68,8 @@ public class ClientThread implements Runnable {
         DbConnect db = DbConnect.getDbCon();
         ArrayList<String> args = new ArrayList<>();
         args.add(username);
-        ResultSet rs = db.query("SELECT * FROM user WHERE username=?", args);
+        args.add(password);
+        ResultSet rs = db.query("SELECT * FROM users WHERE username=? and password=?", args);
 
         int responseCode = 500;
         String responseString = null;
@@ -76,8 +78,7 @@ public class ClientThread implements Runnable {
             responseString = "Username Sudah Dipakai!";
         } else {
             args.add(name);
-            args.add(password);
-            int stat = db.insert("INSERT INTO user VALUES (?,?,?)", args);
+            int stat = db.insert("INSERT INTO users VALUES (?,?,?)", args);
             if (stat > 0) {
                 responseCode = 200;
                 responseString = "Ok";
@@ -94,16 +95,58 @@ public class ClientThread implements Runnable {
         DbConnect db = DbConnect.getDbCon();
         ArrayList<String> args = new ArrayList<>();
         args.add(username);
-        ResultSet rs = db.query("SELECT * FROM user WHERE username=?", args);
+        args.add(password);
+        ResultSet rs = db.query("SELECT * FROM users WHERE username=? and password=?", args);
 
         int responseCode = 500;
         String responseString = null;
         if (rs.next()) {
             responseCode = 200;
             responseString = "Ok";
+            
+            this.me = new Credentials(username);
         } else {
             responseCode = 300;
             responseString = "Invalid credentials!";
+        }
+        
+        this.oos.writeObject(new Response(responseCode, responseString));
+    }
+    
+    private void AddFriend(AddFriendData data) throws SQLException, IOException {
+        String friendUsername = data.getFriendUsername();
+        
+        DbConnect db = DbConnect.getDbCon();
+        ArrayList<String> args = new ArrayList<>();
+        args.add(friendUsername);
+        String query = "SELECT * "
+                + "FROM users "
+                + "WHERE username=?";
+        ResultSet rs = db.query(query, args);
+        
+        int responseCode = -1;
+        String responseString = null;
+        if (rs.next()) {
+            args.add(0, this.me.getUsername());
+            query = "SELECT * "
+                    + "FROM friendships "
+                    + "WHERE me=? AND friend=?";
+            rs = db.query(query, args);
+            
+            if (rs.next()) {
+                responseCode = 400;
+                responseString = "You already friend with " + friendUsername + "!";
+            } else {
+                query = "INSERT INTO friendships VALUES(?,?)";
+                int res = db.insert(query, args);
+                if (res > 0) {
+                    responseCode = 200;
+                    responseString = "Ok";
+                }
+            }
+        } else {
+            responseCode = 400;
+            responseString = "Username not found!";
         }
         
         this.oos.writeObject(new Response(responseCode, responseString));

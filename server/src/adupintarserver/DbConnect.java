@@ -54,7 +54,7 @@ public class DbConnect {
         statement = (PreparedStatement) db.conn.prepareStatement(query);
         int counter = 1;
         for (String arg : args) {
-            statement.setString(counter, arg);
+            statement.setString(counter++, arg);
         }
         ResultSet res = statement.executeQuery();
         return res;

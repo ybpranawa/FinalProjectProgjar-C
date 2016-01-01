@@ -6,10 +6,18 @@
 package adupintar.client;
 
 import java.awt.Rectangle;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.WindowConstants;
+import object.AddFriendData;
+import object.Response;
 
 /**
  *
@@ -22,6 +30,10 @@ public class FriendList extends javax.swing.JFrame {
      */
     public FriendList() {
         initComponents();
+        
+        DefaultListModel model = new DefaultListModel();
+        model.addElement("test");
+        listFriends.setModel(model);
     }
 
     /**
@@ -36,7 +48,9 @@ public class FriendList extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         listFriends = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtBoxSearchUsrename = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,7 +68,14 @@ public class FriendList extends javax.swing.JFrame {
 
         jLabel1.setText("Your Friend List");
 
-        jButton1.setText("Add Friend");
+        btnAdd.setText("Add Friend");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Search Username");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -63,10 +84,15 @@ public class FriendList extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtBoxSearchUsrename)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -75,9 +101,13 @@ public class FriendList extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtBoxSearchUsrename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -95,6 +125,34 @@ public class FriendList extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_listFriendsMouseClicked
 
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        try {
+            String friendUsername = txtBoxSearchUsrename.getText();
+            
+            ServerConnection connection = ServerConnection.getInstance();
+            ObjectInputStream ois = connection.getOis();
+            ObjectOutputStream oos = connection.getOos();
+            
+            AddFriendData data = new AddFriendData(friendUsername);
+            oos.writeObject(data);
+            oos.reset();
+            
+            Response response = (Response) ois.readObject();
+            
+            int responseCode = response.getResponseCode();
+            String responseString = response.getResponseString();
+            if (responseCode == 200) {
+                JOptionPane.showMessageDialog(null, "Friend Added!");
+            } else if (responseCode == 400){
+                JOptionPane.showMessageDialog(null, "Error adding friend! " + responseString);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FriendList.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FriendList.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
+
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
@@ -107,9 +165,11 @@ public class FriendList extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAdd;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList listFriends;
+    private javax.swing.JTextField txtBoxSearchUsrename;
     // End of variables declaration//GEN-END:variables
 }
