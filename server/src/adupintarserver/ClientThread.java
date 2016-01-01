@@ -47,6 +47,8 @@ public class ClientThread implements Runnable {
                     this.LogIn((LogInData) obj);
                 } else if (obj instanceof AddFriendData) {
                     this.AddFriend((AddFriendData) obj);
+                } else if (obj instanceof RequestFriendData) {
+                    this.FriendData((RequestFriendData) obj);
                 }
             } catch (IOException ex) {
                 break;
@@ -150,5 +152,25 @@ public class ClientThread implements Runnable {
         }
         
         this.oos.writeObject(new Response(responseCode, responseString));
+    }
+
+    private void FriendData(RequestFriendData data) throws SQLException, IOException {
+        String returntype = data.getReturntype();
+        
+        DbConnect db = DbConnect.getDbCon();
+        ArrayList<String> args = new ArrayList<>();
+        args.add(this.me.getUsername());
+        String query = "SELECT * "
+                + "FROM friendships "
+                + "WHERE me=? "
+                + "ORDER BY friend";
+        ResultSet rs = db.query(query, args);
+        
+        ArrayList<String> friendList = new ArrayList<>();
+        while (rs.next()) {
+            friendList.add(rs.getString("friend"));
+        }
+        
+        this.oos.writeObject(new ResponseFriendData(friendList));
     }
 }

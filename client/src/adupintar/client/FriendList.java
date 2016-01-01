@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -17,7 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.ListModel;
 import javax.swing.WindowConstants;
 import object.AddFriendData;
+import object.RequestFriendData;
 import object.Response;
+import object.ResponseFriendData;
 
 /**
  *
@@ -28,12 +31,10 @@ public class FriendList extends javax.swing.JFrame {
     /**
      * Creates new form FriendList
      */
-    public FriendList() {
+    public FriendList() throws IOException, ClassNotFoundException {
         initComponents();
         
-        DefaultListModel model = new DefaultListModel();
-        model.addElement("test");
-        listFriends.setModel(model);
+        this.loadFriendData();
     }
 
     /**
@@ -120,7 +121,6 @@ public class FriendList extends javax.swing.JFrame {
                 Chat chatWindow = new Chat();
                 chatWindow.showForm();
                 int idx = listFriends.locationToIndex(evt.getPoint());
-                System.out.println(idx);
             }
         }
     }//GEN-LAST:event_listFriendsMouseClicked
@@ -133,8 +133,8 @@ public class FriendList extends javax.swing.JFrame {
             ObjectInputStream ois = connection.getOis();
             ObjectOutputStream oos = connection.getOos();
             
-            AddFriendData data = new AddFriendData(friendUsername);
-            oos.writeObject(data);
+            AddFriendData request = new AddFriendData(friendUsername);
+            oos.writeObject(request);
             oos.reset();
             
             Response response = (Response) ois.readObject();
@@ -143,6 +143,8 @@ public class FriendList extends javax.swing.JFrame {
             String responseString = response.getResponseString();
             if (responseCode == 200) {
                 JOptionPane.showMessageDialog(null, "Friend Added!");
+                
+                this.loadFriendData();
             } else if (responseCode == 400){
                 JOptionPane.showMessageDialog(null, "Error adding friend! " + responseString);
             }
@@ -172,4 +174,24 @@ public class FriendList extends javax.swing.JFrame {
     private javax.swing.JList listFriends;
     private javax.swing.JTextField txtBoxSearchUsrename;
     // End of variables declaration//GEN-END:variables
+
+    private void loadFriendData() throws IOException, ClassNotFoundException {
+        DefaultListModel model = new DefaultListModel();
+        listFriends.setModel(model);
+        
+        ServerConnection connection = ServerConnection.getInstance();
+        ObjectOutputStream oos = connection.getOos();
+        ObjectInputStream ois = connection.getOis();
+        
+        RequestFriendData request = new RequestFriendData("list");
+        oos.writeObject(request);
+        
+        ResponseFriendData response = (ResponseFriendData) ois.readObject();
+        ArrayList<String> friendList = response.getFriendList();
+        
+        for (String friend : friendList) {
+            model.addElement(friend);
+        }
+    }
+    
 }
