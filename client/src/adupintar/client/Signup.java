@@ -154,7 +154,10 @@ public class Signup extends javax.swing.JFrame {
         String name=txtBoxName.getText();
         String password=txtBoxPassword.getText();
         if(StringUtils.isEmptyOrWhitespaceOnly(username))
+        {
             JOptionPane.showMessageDialog(null, "Username harus diisi!");
+            formWindowClosed(null);
+        }
         else if(StringUtils.isEmptyOrWhitespaceOnly(name))
             JOptionPane.showMessageDialog(null, "Nama harus diisi!");
         else if(StringUtils.isEmptyOrWhitespaceOnly(password))
@@ -174,6 +177,8 @@ public class Signup extends javax.swing.JFrame {
                 
                 if (response.getResponseCode() == 200) {
                     JOptionPane.showMessageDialog(null, "Signup Success!");
+                    this.parent.setVisible(true);
+                    this.dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Signup Failed! " + response.getResponseString());
                 }
