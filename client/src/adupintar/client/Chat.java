@@ -14,11 +14,16 @@ import javax.swing.WindowConstants;
  */
 public class Chat extends javax.swing.JFrame {
 
+    private final String friendUsername;
+    
     /**
      * Creates new form Chat
      */
-    public Chat() {
+    public Chat(String friendUsername) {
         initComponents();
+        
+        this.friendUsername = friendUsername;
+        this.setChatWith(friendUsername);
     }
 
     /**
@@ -102,4 +107,8 @@ public class Chat extends javax.swing.JFrame {
     private javax.swing.JTextArea txtAreaChat;
     private javax.swing.JTextField txtBoxChatToSend;
     // End of variables declaration//GEN-END:variables
+
+    private void setChatWith(String friendUsername) {
+        lblChatWith.setText("Chat with - " + friendUsername);
+    }
 }

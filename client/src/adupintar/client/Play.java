@@ -5,6 +5,9 @@
  */
 package adupintar.client;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
@@ -121,6 +124,8 @@ public class Play extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        Credentials.dispose();
+        ChatServerConnection.dispose();
         if (this.parent != null) {
             this.parent.setVisible(true);
         } else {
@@ -129,8 +134,14 @@ public class Play extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosed
 
     private void btnFriendsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFriendsActionPerformed
-        FriendList friendlistForm = new FriendList();
-        friendlistForm.showForm();
+        try {
+            FriendList friendlistForm = new FriendList();
+            friendlistForm.showForm();
+        } catch (IOException ex) {
+            Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnFriendsActionPerformed
     
     public void showForm() {

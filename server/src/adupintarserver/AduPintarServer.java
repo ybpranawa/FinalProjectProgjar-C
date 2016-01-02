@@ -16,7 +16,13 @@ public class AduPintarServer {
      */
     public static void main(String[] args) {
         int port = 1111;
-        ServerHandle server=new ServerHandle(port);
-        server.start();
+        ServerHandle server = new ServerHandle(port);
+        Thread serverThread = new Thread(server);
+        serverThread.start();
+        
+        int chatPort = 2525;
+        ChatServer chatServer = new ChatServer(chatPort);
+        Thread chatServerThread = new Thread(chatServer);
+        chatServerThread.start();
     }   
 }

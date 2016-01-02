@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import object.LogInData;
+import object.RequestSetUsername;
 import object.Response;
 
 /**
@@ -152,6 +153,9 @@ public class Login extends javax.swing.JFrame {
                 Response response = (Response) ois.readObject();
                 
                 if (response.getResponseCode() == 200) {
+                    Credentials.create(username);
+                    this.logInToChatServer();
+                    
                     Play playForm = new Play(this);
                     playForm.showForm();
                     this.setVisible(false);
@@ -194,4 +198,27 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JTextField txtBoxUsername;
     // End of variables declaration//GEN-END:variables
 
+    private void logInToChatServer() throws IOException, ClassNotFoundException {
+        ChatServerConnection.setHost("localhost");
+        ChatServerConnection.setPort(2525);
+        
+        ChatServerConnection.connect();
+        ChatServerConnection connection = ChatServerConnection.getInstance();
+        ObjectOutputStream oos = connection.getOos();
+        ObjectInputStream ois = connection.getOis();
+        
+        Credentials cred = Credentials.getInstance();
+        if (cred != null) {
+            oos.writeObject(new RequestSetUsername(cred.getUsername()));
+            oos.reset();
+            
+            Response response = (Response) ois.readObject();
+            if (response.getResponseCode() != 200) {
+                JOptionPane.showMessageDialog(null, "Error occured please restart the program");
+                
+                System.exit(1);
+            }
+        }
+    }
+    
 }

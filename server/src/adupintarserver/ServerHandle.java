@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author PRANAWA
  */
-class ServerHandle {
+class ServerHandle implements Runnable {
 
     private int port;
     
@@ -23,7 +23,8 @@ class ServerHandle {
         this.port=port;
     }
 
-    void start() {
+    @Override
+    public void run() {
         try {
             ServerSocket server=new ServerSocket(this.port);
             System.out.println("Server started, port " + this.port);

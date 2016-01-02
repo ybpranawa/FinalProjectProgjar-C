@@ -118,9 +118,10 @@ public class FriendList extends javax.swing.JFrame {
         if (evt.getClickCount() == 2) {
             Rectangle r = listFriends.getCellBounds(0, listFriends.getLastVisibleIndex());
             if (r != null && r.contains(evt.getPoint())) {
-                Chat chatWindow = new Chat();
-                chatWindow.showForm();
                 int idx = listFriends.locationToIndex(evt.getPoint());
+                String friendUsername = (String) listFriends.getModel().getElementAt(idx);
+                Chat chatWindow = new Chat(friendUsername);
+                chatWindow.showForm();
             }
         }
     }//GEN-LAST:event_listFriendsMouseClicked
@@ -129,7 +130,7 @@ public class FriendList extends javax.swing.JFrame {
         try {
             String friendUsername = txtBoxSearchUsrename.getText();
             
-            ServerConnection connection = ServerConnection.getInstance();
+            ChatServerConnection connection = ChatServerConnection.getInstance();
             ObjectInputStream ois = connection.getOis();
             ObjectOutputStream oos = connection.getOos();
             
@@ -179,18 +180,22 @@ public class FriendList extends javax.swing.JFrame {
         DefaultListModel model = new DefaultListModel();
         listFriends.setModel(model);
         
-        ServerConnection connection = ServerConnection.getInstance();
-        ObjectOutputStream oos = connection.getOos();
-        ObjectInputStream ois = connection.getOis();
-        
-        RequestFriendData request = new RequestFriendData("list");
-        oos.writeObject(request);
-        
-        ResponseFriendData response = (ResponseFriendData) ois.readObject();
-        ArrayList<String> friendList = response.getFriendList();
-        
-        for (String friend : friendList) {
-            model.addElement(friend);
+        ChatServerConnection connection = ChatServerConnection.getInstance();
+        if (connection != null) {
+            ObjectOutputStream oos = connection.getOos();
+            ObjectInputStream ois = connection.getOis();
+
+            RequestFriendData request = new RequestFriendData("list");
+            oos.writeObject(request);
+
+            ResponseFriendData response = (ResponseFriendData) ois.readObject();
+            ArrayList<String> friendList = response.getFriendList();
+
+            for (String friend : friendList) {
+                model.addElement(friend);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "You've been logged out!");
         }
     }
     

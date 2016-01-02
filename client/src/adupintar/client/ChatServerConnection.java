@@ -12,29 +12,36 @@ import java.net.Socket;
 
 /**
  *
- * @author Fendy
+ * @author fendy
  */
-public class ServerConnection {
-    private static ServerConnection connection = null;
+public class ChatServerConnection {
+    public static ChatServerConnection connection = null;
     private static String host;
     private static int port;
+
+    public static void dispose() {
+        connection = null;
+    }
     
-    public static synchronized ServerConnection getInstance() throws IOException {
+    public static void connect() throws IOException {
         if (connection == null) {
-            Socket socket = new Socket(host, port);
-            connection = new ServerConnection(socket);
+            Socket socket = new Socket(getHost(), getPort());
+            connection = new ChatServerConnection(socket);
         }
+    }
+    
+    public static ChatServerConnection getInstance() {
         return connection;
     }
     
-    private Socket socket = null;
+    private final Socket socket;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
     
-    private ServerConnection(Socket socket) throws IOException {
+    private ChatServerConnection(Socket socket) throws IOException {
         this.socket = socket;
-        this.oos = new ObjectOutputStream(this.socket.getOutputStream());
-        this.ois = new ObjectInputStream(this.socket.getInputStream());
+        this.oos = new ObjectOutputStream(socket.getOutputStream());
+        this.ois = new ObjectInputStream(socket.getInputStream());
     }
 
     /**
@@ -45,10 +52,10 @@ public class ServerConnection {
     }
 
     /**
-     * @param host the host to set
+     * @param aHost the host to set
      */
-    public static void setHost(String host) {
-        ServerConnection.host = host;
+    public static void setHost(String aHost) {
+        host = aHost;
     }
 
     /**
@@ -59,10 +66,10 @@ public class ServerConnection {
     }
 
     /**
-     * @param port the port to set
+     * @param aPort the port to set
      */
-    public static void setPort(int port) {
-        ServerConnection.port = port;
+    public static void setPort(int aPort) {
+        port = aPort;
     }
 
     /**
@@ -78,4 +85,5 @@ public class ServerConnection {
     public ObjectInputStream getOis() {
         return ois;
     }
+    
 }

@@ -45,13 +45,9 @@ public class ClientThread implements Runnable {
                     this.SignUp((SignUpData) obj);
                 } else if (obj instanceof LogInData) {
                     this.LogIn((LogInData) obj);
-                } else if (obj instanceof AddFriendData) {
-                    this.AddFriend((AddFriendData) obj);
-                } else if (obj instanceof RequestFriendData) {
-                    this.FriendData((RequestFriendData) obj);
                 }
             } catch (IOException ex) {
-                break;
+                this.connectionOk = false;
                 //System.out.println("lala");
                 //Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
@@ -115,62 +111,4 @@ public class ClientThread implements Runnable {
         this.oos.writeObject(new Response(responseCode, responseString));
     }
     
-    private void AddFriend(AddFriendData data) throws SQLException, IOException {
-        String friendUsername = data.getFriendUsername();
-        
-        DbConnect db = DbConnect.getDbCon();
-        ArrayList<String> args = new ArrayList<>();
-        args.add(friendUsername);
-        String query = "SELECT * "
-                + "FROM users "
-                + "WHERE username=?";
-        ResultSet rs = db.query(query, args);
-        
-        int responseCode = -1;
-        String responseString = null;
-        if (rs.next()) {
-            args.add(0, this.me.getUsername());
-            query = "SELECT * "
-                    + "FROM friendships "
-                    + "WHERE me=? AND friend=?";
-            rs = db.query(query, args);
-            
-            if (rs.next()) {
-                responseCode = 400;
-                responseString = "You already friend with " + friendUsername + "!";
-            } else {
-                query = "INSERT INTO friendships VALUES(?,?)";
-                int res = db.insert(query, args);
-                if (res > 0) {
-                    responseCode = 200;
-                    responseString = "Ok";
-                }
-            }
-        } else {
-            responseCode = 400;
-            responseString = "Username not found!";
-        }
-        
-        this.oos.writeObject(new Response(responseCode, responseString));
-    }
-
-    private void FriendData(RequestFriendData data) throws SQLException, IOException {
-        String returntype = data.getReturntype();
-        
-        DbConnect db = DbConnect.getDbCon();
-        ArrayList<String> args = new ArrayList<>();
-        args.add(this.me.getUsername());
-        String query = "SELECT * "
-                + "FROM friendships "
-                + "WHERE me=? "
-                + "ORDER BY friend";
-        ResultSet rs = db.query(query, args);
-        
-        ArrayList<String> friendList = new ArrayList<>();
-        while (rs.next()) {
-            friendList.add(rs.getString("friend"));
-        }
-        
-        this.oos.writeObject(new ResponseFriendData(friendList));
-    }
 }
