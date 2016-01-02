@@ -72,13 +72,22 @@ public class Play extends javax.swing.JFrame {
         tableMap.getTableHeader().setResizingAllowed(false);
         tableMap.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tableMap);
-        tableMap.getAccessibleContext().setAccessibleParent(null);
 
         jLabel1.setText("Adu Pintar!");
 
         btnHelp.setText("Help");
+        btnHelp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHelpActionPerformed(evt);
+            }
+        });
 
         btnEndGame.setText("End Game");
+        btnEndGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEndGameActionPerformed(evt);
+            }
+        });
 
         btnFriends.setText("Friends");
         btnFriends.addActionListener(new java.awt.event.ActionListener() {
@@ -153,6 +162,17 @@ public class Play extends javax.swing.JFrame {
             Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnFriendsActionPerformed
+
+    private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
+        Help helpForm=new Help(this);
+        helpForm.showForm();
+        this.setVisible(false);
+    }//GEN-LAST:event_btnHelpActionPerformed
+
+    private void btnEndGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndGameActionPerformed
+        this.parent.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnEndGameActionPerformed
     
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
