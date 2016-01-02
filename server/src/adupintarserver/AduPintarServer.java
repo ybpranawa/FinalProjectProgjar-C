@@ -24,5 +24,7 @@ public class AduPintarServer {
         ChatServer chatServer = new ChatServer(chatPort);
         Thread chatServerThread = new Thread(chatServer);
         chatServerThread.start();
+        
+        ActiveUsers.init();
     }   
 }

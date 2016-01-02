@@ -217,6 +217,12 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Error occured please restart the program");
                 
                 System.exit(1);
+            } else {
+                ChatListener listener = new ChatListener();
+                Thread t = new Thread(listener);
+                t.start();
+                
+                Manager.setChatListener(listener);
             }
         }
     }

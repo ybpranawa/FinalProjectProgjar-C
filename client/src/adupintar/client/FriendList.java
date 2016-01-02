@@ -120,7 +120,7 @@ public class FriendList extends javax.swing.JFrame {
             if (r != null && r.contains(evt.getPoint())) {
                 int idx = listFriends.locationToIndex(evt.getPoint());
                 String friendUsername = (String) listFriends.getModel().getElementAt(idx);
-                Chat chatWindow = new Chat(friendUsername);
+                Chat chatWindow = new Chat(friendUsername, Manager.getChatListener());
                 chatWindow.showForm();
             }
         }
@@ -130,7 +130,7 @@ public class FriendList extends javax.swing.JFrame {
         try {
             String friendUsername = txtBoxSearchUsrename.getText();
             
-            ChatServerConnection connection = ChatServerConnection.getInstance();
+            ServerConnection connection = ServerConnection.getInstance();
             ObjectInputStream ois = connection.getOis();
             ObjectOutputStream oos = connection.getOos();
             
@@ -180,13 +180,14 @@ public class FriendList extends javax.swing.JFrame {
         DefaultListModel model = new DefaultListModel();
         listFriends.setModel(model);
         
-        ChatServerConnection connection = ChatServerConnection.getInstance();
+        ServerConnection connection = ServerConnection.getInstance();
         if (connection != null) {
             ObjectOutputStream oos = connection.getOos();
             ObjectInputStream ois = connection.getOis();
 
             RequestFriendData request = new RequestFriendData("list");
             oos.writeObject(request);
+            oos.reset();
 
             ResponseFriendData response = (ResponseFriendData) ois.readObject();
             ArrayList<String> friendList = response.getFriendList();

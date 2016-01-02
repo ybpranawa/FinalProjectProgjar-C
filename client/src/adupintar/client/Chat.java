@@ -5,8 +5,14 @@
  */
 package adupintar.client;
 
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import object.ChatMessage;
 
 /**
  *
@@ -15,15 +21,19 @@ import javax.swing.WindowConstants;
 public class Chat extends javax.swing.JFrame {
 
     private final String friendUsername;
+    private final ChatListener listener;
     
     /**
      * Creates new form Chat
      */
-    public Chat(String friendUsername) {
+    public Chat(String friendUsername, ChatListener listener) {
         initComponents();
         
         this.friendUsername = friendUsername;
         this.setChatWith(friendUsername);
+        
+        this.listener = listener;
+        this.listener.addChatWith(friendUsername, this);
     }
 
     /**
@@ -42,6 +52,11 @@ public class Chat extends javax.swing.JFrame {
         lblChatWith = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         txtAreaChat.setColumns(20);
         txtAreaChat.setLineWrap(true);
@@ -49,6 +64,11 @@ public class Chat extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtAreaChat);
 
         btnSend.setText("Send");
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
+            }
+        });
 
         lblChatWith.setText("Chat with - Someone");
 
@@ -86,6 +106,26 @@ public class Chat extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.listener.removeChat(this.friendUsername);
+    }//GEN-LAST:event_formWindowClosed
+
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        try {
+            String message = txtBoxChatToSend.getText() + "\n";
+            
+            ChatServerConnection connection = ChatServerConnection.getInstance();
+            ObjectOutputStream oos = connection.getOos();
+            
+            oos.writeObject(new ChatMessage(this.friendUsername, message));
+            oos.reset();
+            
+            txtBoxChatToSend.setText("");
+        } catch (IOException ex) {
+            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnSendActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -110,5 +150,9 @@ public class Chat extends javax.swing.JFrame {
 
     private void setChatWith(String friendUsername) {
         lblChatWith.setText("Chat with - " + friendUsername);
+    }
+    
+    public void appendMessage(String msg) {
+        this.txtAreaChat.append(msg);
     }
 }

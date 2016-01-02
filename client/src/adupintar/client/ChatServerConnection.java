@@ -15,7 +15,7 @@ import java.net.Socket;
  * @author fendy
  */
 public class ChatServerConnection {
-    public static ChatServerConnection connection = null;
+    private static ChatServerConnection connection = null;
     private static String host;
     private static int port;
 

@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
+import object.LogOutData;
 
 /**
  *
@@ -126,6 +127,15 @@ public class Play extends javax.swing.JFrame {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         Credentials.dispose();
         ChatServerConnection.dispose();
+        
+        try {
+            ServerConnection connection = ServerConnection.getInstance();
+            connection.getOos().writeObject(new LogOutData());
+            connection.getOos().reset();
+        } catch (IOException ex) {
+            Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         if (this.parent != null) {
             this.parent.setVisible(true);
         } else {
