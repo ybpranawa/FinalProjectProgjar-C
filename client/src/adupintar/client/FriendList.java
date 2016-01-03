@@ -6,6 +6,7 @@
 package adupintar.client;
 
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -77,6 +78,12 @@ public class FriendList extends javax.swing.JFrame {
         });
 
         jLabel2.setText("Search Username");
+
+        txtBoxSearchUsrename.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBoxSearchUsrenameKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -155,6 +162,12 @@ public class FriendList extends javax.swing.JFrame {
             Logger.getLogger(FriendList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void txtBoxSearchUsrenameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBoxSearchUsrenameKeyPressed
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            btnAdd.doClick();
+        }
+    }//GEN-LAST:event_txtBoxSearchUsrenameKeyPressed
 
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

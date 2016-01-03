@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class AduPintar {
     public static void main(String args[]) {
-        String host = "localhost";
+        String host = "192.168.0.103";
         int port = 1111;
         
         try {

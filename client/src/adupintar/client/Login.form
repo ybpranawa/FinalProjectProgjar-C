@@ -100,8 +100,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtBoxUsername">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtBoxUsernameKeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtBoxPassword">
+      <Events>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtBoxPasswordKeyPressed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnSignup">
       <Properties>

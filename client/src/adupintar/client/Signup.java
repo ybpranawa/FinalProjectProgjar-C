@@ -7,6 +7,7 @@ package adupintar.client;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.StringUtils;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
@@ -72,6 +73,24 @@ public class Signup extends javax.swing.JFrame {
         jLabel3.setText("Username");
 
         jLabel4.setText("Password");
+
+        txtBoxName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBoxNameKeyPressed(evt);
+            }
+        });
+
+        txtBoxUsername.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBoxUsernameKeyPressed(evt);
+            }
+        });
+
+        txtBoxPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBoxPasswordKeyPressed(evt);
+            }
+        });
 
         btnSignUp.setText("Sign Up");
         btnSignUp.addActionListener(new java.awt.event.ActionListener() {
@@ -195,6 +214,24 @@ public class Signup extends javax.swing.JFrame {
         this.parent.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void txtBoxNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBoxNameKeyPressed
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            btnSignUp.doClick();
+        }
+    }//GEN-LAST:event_txtBoxNameKeyPressed
+
+    private void txtBoxUsernameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBoxUsernameKeyPressed
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            btnSignUp.doClick();
+        }
+    }//GEN-LAST:event_txtBoxUsernameKeyPressed
+
+    private void txtBoxPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBoxPasswordKeyPressed
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            btnSignUp.doClick();
+        }
+    }//GEN-LAST:event_txtBoxPasswordKeyPressed
 
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

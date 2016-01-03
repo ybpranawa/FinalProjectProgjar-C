@@ -6,6 +6,7 @@
 package adupintar.client;
 
 import com.mysql.jdbc.StringUtils;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -63,6 +64,18 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setText("Username ");
 
         jLabel3.setText("Password");
+
+        txtBoxUsername.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBoxUsernameKeyPressed(evt);
+            }
+        });
+
+        txtBoxPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBoxPasswordKeyPressed(evt);
+            }
+        });
 
         btnSignup.setText("Sign Up");
         btnSignup.addActionListener(new java.awt.event.ActionListener() {
@@ -178,6 +191,18 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosed
 
+    private void txtBoxUsernameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBoxUsernameKeyPressed
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            btnLogin.doClick();
+        }
+    }//GEN-LAST:event_txtBoxUsernameKeyPressed
+
+    private void txtBoxPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBoxPasswordKeyPressed
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            btnLogin.doClick();
+        }
+    }//GEN-LAST:event_txtBoxPasswordKeyPressed
+
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
@@ -199,7 +224,7 @@ public class Login extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void logInToChatServer() throws IOException, ClassNotFoundException {
-        ChatServerConnection.setHost("localhost");
+        ChatServerConnection.setHost("192.168.0.103");
         ChatServerConnection.setPort(2525);
         
         ChatServerConnection.connect();
