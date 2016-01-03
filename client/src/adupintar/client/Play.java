@@ -5,10 +5,17 @@
  */
 package adupintar.client;
 
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.layout.Border;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 import object.LogOutData;
 
@@ -27,6 +34,21 @@ public class Play extends javax.swing.JFrame {
     public Play(JFrame parent) {
         this.parent = parent;
         initComponents();
+        Container pane = jPanel1;
+        pane.setLayout(new GridLayout(10,10));
+        JLabel[][] arr = new JLabel[10][10];
+        for(int i=0; i<10; i++){
+            for(int j=0; j<10; j++){
+                //JLabel label = new JLabel(Integer.toString(i+1));
+                arr[i][j] = new JLabel();
+                arr[i][j].setText(Integer.toString(i*10+j+1));
+                javax.swing.border.Border border = BorderFactory.createLineBorder(Color.BLUE,1);
+                arr[i][j].setBorder(border);
+                //javax.swing.border.Border border = BorderFactory.createLineBorder(Color.BLUE,1);
+                //label.setBorder(border);
+                pane.add(arr[i][j]);
+            }
+        }
     }
 
     /**
@@ -40,12 +62,11 @@ public class Play extends javax.swing.JFrame {
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tableMap = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnHelp = new javax.swing.JButton();
         btnEndGame = new javax.swing.JButton();
         btnFriends = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -60,18 +81,6 @@ public class Play extends javax.swing.JFrame {
                 formWindowClosed(evt);
             }
         });
-
-        tableMap.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        tableMap.getTableHeader().setResizingAllowed(false);
-        tableMap.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(tableMap);
 
         jLabel1.setText("Adu Pintar!");
 
@@ -96,6 +105,19 @@ public class Play extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 255)));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 317, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 282, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -111,8 +133,8 @@ public class Play extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnHelp))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,12 +144,12 @@ public class Play extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(btnHelp))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEndGame)
                     .addComponent(btnFriends))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -190,8 +212,7 @@ public class Play extends javax.swing.JFrame {
     private javax.swing.JButton btnHelp;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable tableMap;
     // End of variables declaration//GEN-END:variables
 }
