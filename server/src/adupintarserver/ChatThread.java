@@ -73,11 +73,13 @@ public class ChatThread implements Runnable {
         String destUsername = msg.getFriendUsername();
         String message = msg.getMessage();
         
+        this.oos.writeObject(new ChatMessage(destUsername, AddTimestamp("You", message)));
+        
         ChatThread ct = ActiveUsers.getUser(destUsername);
         if (ct != null) {
-            ct.SendMessage(new ChatMessage(fromUsername, AddTimestamp(message)));
+            ct.SendMessage(new ChatMessage(fromUsername, AddTimestamp(fromUsername, message)));
         } else {
-            this.oos.writeObject(new ChatMessage(destUsername, AddTimestamp(destUsername + " is currently offline!\n")));
+            this.oos.writeObject(new ChatMessage(destUsername, AddTimestamp("Server", destUsername + " is currently offline!\n")));
             this.oos.reset();
         }
     }
@@ -87,9 +89,9 @@ public class ChatThread implements Runnable {
         this.oos.reset();
     }
     
-    private String AddTimestamp(String message) {
+    private String AddTimestamp(String username, String message) {
         DateFormat df = new SimpleDateFormat("(HH:mm)");
         Date dateobj = new Date();
-        return df.format(dateobj) + " " + message;
+        return username + ": " + df.format(dateobj) + " " + message;
     }
 }
