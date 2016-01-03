@@ -5,6 +5,7 @@
  */
 package adupintar.client;
 
+import com.sun.glass.events.KeyEvent;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
@@ -62,6 +63,12 @@ public class Chat extends javax.swing.JFrame {
         txtAreaChat.setLineWrap(true);
         txtAreaChat.setRows(5);
         jScrollPane1.setViewportView(txtAreaChat);
+
+        txtBoxChatToSend.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBoxChatToSendKeyPressed(evt);
+            }
+        });
 
         btnSend.setText("Send");
         btnSend.addActionListener(new java.awt.event.ActionListener() {
@@ -125,6 +132,13 @@ public class Chat extends javax.swing.JFrame {
             Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnSendActionPerformed
+
+    private void txtBoxChatToSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBoxChatToSendKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            btnSend.doClick();
+        }
+    }//GEN-LAST:event_txtBoxChatToSendKeyPressed
 
     /**
      * @param args the command line arguments
