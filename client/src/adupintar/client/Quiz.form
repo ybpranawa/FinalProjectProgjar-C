@@ -30,23 +30,27 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblQuestion" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblQuestionNumber" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="radioBtnD" min="-2" max="-2" attributes="0"/>
-                      <Component id="radioButtonC" min="-2" max="-2" attributes="0"/>
-                      <Component id="radioBtnB" min="-2" max="-2" attributes="0"/>
-                      <Component id="radioBtnA" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" attributes="0">
-                      <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblQuestion" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblQuestionNumber" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="radioBtnD" min="-2" max="-2" attributes="0"/>
+                              <Component id="radioButtonC" min="-2" max="-2" attributes="0"/>
+                              <Component id="radioBtnB" min="-2" max="-2" attributes="0"/>
+                              <Component id="radioBtnA" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="236" max="-2" attributes="0"/>
                       <Component id="btnSubmit" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace pref="259" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
