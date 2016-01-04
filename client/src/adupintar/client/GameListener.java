@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import object.ChatMessage;
 import object.MapData;
+import object.StartQuizData;
 
 /**
  *
@@ -48,6 +49,8 @@ class GameListener implements Runnable {
                             this.form.setMap(i,j,mep[i][j]);
                         }
                     }
+                } else if (obj instanceof StartQuizData) {
+                    this.Quiz((StartQuizData) obj);
                 }
             }
         } catch (IOException ex) {
@@ -68,5 +71,11 @@ class GameListener implements Runnable {
     
     public void stopListening() {
         this.connectionOk = false;
+    }
+    
+    private void Quiz(StartQuizData data) {
+        QuizOverview overviewForm = new QuizOverview(data.getEnemyUsername(), data.getRound(), form);
+        form.setVisible(false);
+        overviewForm.showForm();
     }
 }

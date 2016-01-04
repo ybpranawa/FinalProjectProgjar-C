@@ -17,6 +17,7 @@ import object.RequestMapData;
 import object.RequestMove;
 import object.RequestSetUsername;
 import object.Response;
+import object.StartQuizData;
 
 /**
  *
@@ -44,9 +45,11 @@ class GameThread implements Runnable {
             try {
                 Object obj = this.ois.readObject();
                 if (obj instanceof RequestSetUsername) {
-                    this.SetCredentials((RequestSetUsername) obj);
+                    this.setCredentials((RequestSetUsername) obj);
                 } else if (obj instanceof RequestMapData) {
-                    this.ResponseMap((RequestMapData) obj);
+                    this.responseMap((RequestMapData) obj);
+                } else if (obj instanceof RequestMove) {
+                    this.movePerson((RequestMove) obj);
                 }
             } catch (IOException ex) {
                 this.connectionOk = false;
@@ -61,7 +64,7 @@ class GameThread implements Runnable {
         }
     }
     
-    private void SetCredentials(RequestSetUsername data) throws IOException {
+    private void setCredentials(RequestSetUsername data) throws IOException {
         String username = data.getUsername();
         
         PlayingUsers.setActive(username, this);
@@ -72,9 +75,19 @@ class GameThread implements Runnable {
         
         PlayingUsers.broadcastMap();
     }
+    
+    private void movePerson(RequestMove data) throws IOException {
+        int move = data.getMove();
+        PlayingUsers.movePerson(this.me.getUsername(), move);
+    }
 
-    public void ResponseMap(RequestMapData data) throws IOException {
+    public void responseMap(RequestMapData data) throws IOException {
         this.oos.writeObject(new MapData(PlayingUsers.getMapData()));
+        this.oos.reset();
+    }
+    
+    public void responseStartQuiz(StartQuizData data) throws IOException {
+        this.oos.writeObject(data);
         this.oos.reset();
     }
 }
