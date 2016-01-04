@@ -85,5 +85,4 @@ public class ChatServerConnection {
     public ObjectInputStream getOis() {
         return ois;
     }
-    
 }

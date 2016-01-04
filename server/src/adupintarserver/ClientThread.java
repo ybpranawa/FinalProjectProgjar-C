@@ -180,7 +180,8 @@ public class ClientThread implements Runnable {
         this.oos.reset();
     }
     
-    private void LogOut() {
+    private void LogOut() throws IOException {
         ActiveUsers.setInactive(this.me.getUsername());
+        PlayingUsers.setInactive(this.me.getUsername());
     }
 }

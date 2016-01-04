@@ -50,6 +50,7 @@ public class ChatThread implements Runnable {
                 }
             } catch (IOException ex) {
                 this.connectionOk = false;
+                ActiveUsers.setInactive(this.me.getUsername());
                 //System.out.println("lala");
                 //Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {

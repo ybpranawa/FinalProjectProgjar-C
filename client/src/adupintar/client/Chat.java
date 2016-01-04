@@ -59,6 +59,7 @@ public class Chat extends javax.swing.JFrame {
             }
         });
 
+        txtAreaChat.setEditable(false);
         txtAreaChat.setColumns(20);
         txtAreaChat.setLineWrap(true);
         txtAreaChat.setRows(5);
@@ -134,7 +135,6 @@ public class Chat extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSendActionPerformed
 
     private void txtBoxChatToSendKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBoxChatToSendKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode()==KeyEvent.VK_ENTER){
             btnSend.doClick();
         }

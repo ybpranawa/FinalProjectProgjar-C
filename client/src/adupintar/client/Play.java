@@ -5,10 +5,14 @@
  */
 package adupintar.client;
 
+import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.layout.Border;
@@ -18,6 +22,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 import object.LogOutData;
+import object.MapData;
+import object.RequestMapData;
+import object.RequestMove;
 
 /**
  *
@@ -26,29 +33,19 @@ import object.LogOutData;
 public class Play extends javax.swing.JFrame {
 
     private final JFrame parent;
+    private final int dimension;
     
     /**
      * Creates new form Play
      * @param parent
+     * @param dimension
      */
-    public Play(JFrame parent) {
+    public Play(JFrame parent, int dimension) throws IOException, ClassNotFoundException {
         this.parent = parent;
+        this.dimension = dimension;
         initComponents();
-        Container pane = jPanel1;
-        pane.setLayout(new GridLayout(10,10));
-        JLabel[][] arr = new JLabel[10][10];
-        for(int i=0; i<10; i++){
-            for(int j=0; j<10; j++){
-                //JLabel label = new JLabel(Integer.toString(i+1));
-                arr[i][j] = new JLabel();
-                arr[i][j].setText(Integer.toString(i*10+j+1));
-                javax.swing.border.Border border = BorderFactory.createLineBorder(Color.BLUE,1);
-                arr[i][j].setBorder(border);
-                //javax.swing.border.Border border = BorderFactory.createLineBorder(Color.BLUE,1);
-                //label.setBorder(border);
-                pane.add(arr[i][j]);
-            }
-        }
+        
+        initMap();
     }
 
     /**
@@ -66,7 +63,7 @@ public class Play extends javax.swing.JFrame {
         btnHelp = new javax.swing.JButton();
         btnEndGame = new javax.swing.JButton();
         btnFriends = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        panelGridMap = new javax.swing.JPanel();
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -105,16 +102,21 @@ public class Play extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 255)));
+        panelGridMap.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 255)));
+        panelGridMap.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                panelGridMapKeyPressed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelGridMapLayout = new javax.swing.GroupLayout(panelGridMap);
+        panelGridMap.setLayout(panelGridMapLayout);
+        panelGridMapLayout.setHorizontalGroup(
+            panelGridMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 317, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelGridMapLayout.setVerticalGroup(
+            panelGridMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 282, Short.MAX_VALUE)
         );
 
@@ -133,7 +135,7 @@ public class Play extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnHelp))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelGridMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -144,7 +146,7 @@ public class Play extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(btnHelp))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelGridMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEndGame)
@@ -158,6 +160,7 @@ public class Play extends javax.swing.JFrame {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         Credentials.dispose();
         ChatServerConnection.dispose();
+        GameServerConnection.dispose();
         
         try {
             ServerConnection connection = ServerConnection.getInstance();
@@ -195,6 +198,30 @@ public class Play extends javax.swing.JFrame {
         this.parent.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnEndGameActionPerformed
+
+    private void panelGridMapKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panelGridMapKeyPressed
+        int move = -1;
+        if (evt.getKeyCode() == KeyEvent.VK_LEFT){
+            move = 0;
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            move = 1;
+        } else if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
+            move = 2;
+        } else if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
+            move = 3;
+        } 
+        if (move != -1) {
+            try {
+                GameServerConnection connection = GameServerConnection.getInstance();
+                ObjectOutputStream oos = connection.getOos();
+                oos.writeObject(new RequestMove(move));
+                oos.reset();
+                
+            } catch (IOException ex) {
+                Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_panelGridMapKeyPressed
     
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -212,7 +239,36 @@ public class Play extends javax.swing.JFrame {
     private javax.swing.JButton btnHelp;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jList1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel panelGridMap;
     // End of variables declaration//GEN-END:variables
+    private JLabel[][] map = new JLabel[10][10];
+    
+    
+    private void initMap() throws IOException, ClassNotFoundException {
+        GameServerConnection connection = GameServerConnection.getInstance();
+        ObjectOutputStream oos = connection.getOos();
+        ObjectInputStream ois = connection.getOis();
+        
+        Container pane = panelGridMap;
+        pane.setLayout(new GridLayout(this.dimension, this.dimension));
+        for (int i=0; i<this.dimension; i++) {
+            for (int j=0; j<this.dimension; j++) {
+                map[i][j] = new JLabel();
+                javax.swing.border.Border border = BorderFactory.createLineBorder(Color.BLUE,1);
+                map[i][j].setBorder(border);
+                pane.add(map[i][j]);
+            }
+        }
+        
+        GameListener listener = new GameListener(this.dimension, this);
+        Thread t = new Thread(listener);
+        t.start();
+
+        Manager.setGameListener(listener);
+    }
+    
+    public void setMap(int i, int j, String text) {
+        map[i][j].setText(text);
+    }
 }

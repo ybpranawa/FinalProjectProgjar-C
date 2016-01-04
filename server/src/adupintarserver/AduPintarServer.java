@@ -25,6 +25,12 @@ public class AduPintarServer {
         Thread chatServerThread = new Thread(chatServer);
         chatServerThread.start();
         
+        int gamePort = 4747;
+        GameServer gameServer = new GameServer(gamePort);
+        Thread gameServerThread = new Thread(gameServer);
+        gameServerThread.start();
+        
         ActiveUsers.init();
+        PlayingUsers.init(10);
     }   
 }

@@ -168,8 +168,9 @@ public class Login extends javax.swing.JFrame {
                 if (response.getResponseCode() == 200) {
                     Credentials.create(username);
                     this.logInToChatServer();
+                    this.logInToGameServer();
                     
-                    Play playForm = new Play(this);
+                    Play playForm = new Play(this, 10);
                     playForm.showForm();
                     this.setVisible(false);
                 } else {
@@ -224,7 +225,7 @@ public class Login extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void logInToChatServer() throws IOException, ClassNotFoundException {
-        ChatServerConnection.setHost("192.168.0.103");
+        ChatServerConnection.setHost("localhost");
         ChatServerConnection.setPort(2525);
         
         ChatServerConnection.connect();
@@ -248,6 +249,29 @@ public class Login extends javax.swing.JFrame {
                 t.start();
                 
                 Manager.setChatListener(listener);
+            }
+        }
+    }
+
+    private void logInToGameServer() throws IOException, ClassNotFoundException {
+        GameServerConnection.setHost("localhost");
+        GameServerConnection.setPort(4747);
+        GameServerConnection.connect();
+        
+        GameServerConnection connection = GameServerConnection.getInstance();
+        ObjectOutputStream oos = connection.getOos();
+        ObjectInputStream ois = connection.getOis();
+        
+        Credentials cred = Credentials.getInstance();
+        if (cred != null) {
+            oos.writeObject(new RequestSetUsername(cred.getUsername()));
+            oos.reset();
+            
+            Response response = (Response) ois.readObject();
+            if (response.getResponseCode() != 200) {
+                JOptionPane.showMessageDialog(null, "Error occured please restart the program");
+                
+                System.exit(1);
             }
         }
     }

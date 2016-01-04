@@ -7,46 +7,48 @@ package adupintar.client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.Map;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
+import javax.swing.JLabel;
 import object.ChatMessage;
+import object.MapData;
 
 /**
  *
  * @author fendy
  */
-public class ChatListener implements Runnable {
-
+class GameListener implements Runnable {
     private boolean connectionOk = false;
     private Map<String, Chat> chatWith;
+    private int dimension;
+    private Play form;
     
-    public ChatListener() {
+    public GameListener(int dimension, Play form) {
         this.connectionOk = true;
+        this.dimension = dimension;
+        this.form = form;
     }
     
     @Override
     public void run() {
         this.chatWith = new Hashtable<>();
         try {
-            ChatServerConnection connection = ChatServerConnection.getInstance();
+            GameServerConnection connection = GameServerConnection.getInstance();
             ObjectInputStream ois = connection.getOis();
             
             while (this.connectionOk) {
-                ChatMessage msg = (ChatMessage) ois.readObject();
-                String friendUsername = msg.getFriendUsername();
-                String message = msg.getMessage();
-                
-                if (!this.chatWith.containsKey(friendUsername)) {
-                    Chat chatForm = new Chat(friendUsername, this);
-                    this.chatWith.put(friendUsername, chatForm);
-                    chatForm.showForm();
+                Object obj = ois.readObject();
+                if (obj instanceof MapData) {
+                    MapData mapData = (MapData) obj;
+                    String[][] mep = mapData.getMap();
+                    for (int i=0; i<dimension; i++) {
+                        for (int j=0; j<dimension; j++) {
+                            this.form.setMap(i,j,mep[i][j]);
+                        }
+                    }
                 }
-                
-                Chat friendForm = this.chatWith.get(friendUsername);
-                friendForm.appendMessage(message);
             }
         } catch (IOException ex) {
             this.connectionOk = false;

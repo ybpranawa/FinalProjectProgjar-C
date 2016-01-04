@@ -11,6 +11,7 @@ package adupintar.client;
  */
 public class Manager {
     private static ChatListener chatListener;
+    private static GameListener gameListener;
 
     /**
      * @return the chatListener
@@ -24,6 +25,20 @@ public class Manager {
      */
     public static void setChatListener(ChatListener aChatListener) {
         chatListener = aChatListener;
+    }
+
+    /**
+     * @return the gameListener
+     */
+    public static GameListener getGameListener() {
+        return gameListener;
+    }
+
+    /**
+     * @param aGameListener the gameListener to set
+     */
+    public static void setGameListener(GameListener aGameListener) {
+        gameListener = aGameListener;
     }
     
     
