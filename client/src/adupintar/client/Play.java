@@ -104,6 +104,11 @@ public class Play extends javax.swing.JFrame {
         });
 
         panelGridMap.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 255)));
+        panelGridMap.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelGridMapMouseClicked(evt);
+            }
+        });
         panelGridMap.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 panelGridMapKeyPressed(evt);
@@ -226,6 +231,10 @@ public class Play extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_panelGridMapKeyPressed
+
+    private void panelGridMapMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelGridMapMouseClicked
+        panelGridMap.requestFocus();
+    }//GEN-LAST:event_panelGridMapMouseClicked
     
     public void showForm() {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

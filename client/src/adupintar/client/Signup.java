@@ -172,15 +172,15 @@ public class Signup extends javax.swing.JFrame {
         String username=txtBoxUsername.getText();
         String name=txtBoxName.getText();
         String password=txtBoxPassword.getText();
-        if(StringUtils.isEmptyOrWhitespaceOnly(username))
-        {
+        if(StringUtils.isEmptyOrWhitespaceOnly(username)) {
             JOptionPane.showMessageDialog(null, "Username harus diisi!");
-            formWindowClosed(null);
         }
-        else if(StringUtils.isEmptyOrWhitespaceOnly(name))
+        else if(StringUtils.isEmptyOrWhitespaceOnly(name)) {
             JOptionPane.showMessageDialog(null, "Nama harus diisi!");
-        else if(StringUtils.isEmptyOrWhitespaceOnly(password))
+        }
+        else if(StringUtils.isEmptyOrWhitespaceOnly(password)) {
             JOptionPane.showMessageDialog(null, "Password harus diisi!");
+        }
         else
         {
             try {
