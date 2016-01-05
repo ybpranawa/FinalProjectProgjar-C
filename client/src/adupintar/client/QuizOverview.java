@@ -10,8 +10,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import object.ChoiceData;
+import object.EndQuizData;
+import object.QuizAnswer;
+import object.QuizData;
 import object.RequestSetUsername;
 import object.Response;
 
@@ -22,6 +27,7 @@ import object.Response;
 public class QuizOverview extends javax.swing.JFrame {
     
     private Play parent;
+    private String enemyUsername;
     
     /**
      * Creates new form QuizOverview
@@ -33,8 +39,11 @@ public class QuizOverview extends javax.swing.JFrame {
         this.parent = parent;
         initComponents();
         
+        this.enemyUsername = enemyUsername;
         lblEnemy.setText("Enemy: " + enemyUsername);
         lblRounds.setText("Rounds: " + rounds);
+        
+        panelKategori.setVisible(false);
     }
 
     /**
@@ -51,10 +60,11 @@ public class QuizOverview extends javax.swing.JFrame {
         lblRounds = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         lblFormat = new javax.swing.JLabel();
+        panelKategori = new javax.swing.JPanel();
+        btnPendidikanCategory = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnKesehatanCategory = new javax.swing.JButton();
+        btnSainsCategory = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -71,28 +81,61 @@ public class QuizOverview extends javax.swing.JFrame {
 
         lblFormat.setText("Format: classic");
 
-        jLabel2.setText("pilih kategori pertanyaan");
-
-        jButton1.setText("Pendidikan");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnPendidikanCategory.setText("Pendidikan");
+        btnPendidikanCategory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnPendidikanCategoryActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Kesehatan");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jLabel2.setText("Pilih kategori pertanyaan:");
+
+        btnKesehatanCategory.setText("Kesehatan");
+        btnKesehatanCategory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnKesehatanCategoryActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Sains");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnSainsCategory.setText("Sains");
+        btnSainsCategory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnSainsCategoryActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout panelKategoriLayout = new javax.swing.GroupLayout(panelKategori);
+        panelKategori.setLayout(panelKategoriLayout);
+        panelKategoriLayout.setHorizontalGroup(
+            panelKategoriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelKategoriLayout.createSequentialGroup()
+                .addGroup(panelKategoriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelKategoriLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnPendidikanCategory)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnKesehatanCategory))
+                    .addGroup(panelKategoriLayout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(btnSainsCategory))
+                    .addGroup(panelKategoriLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel2)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelKategoriLayout.setVerticalGroup(
+            panelKategoriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelKategoriLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelKategoriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPendidikanCategory)
+                    .addComponent(btnKesehatanCategory))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSainsCategory)
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -101,26 +144,15 @@ public class QuizOverview extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(lblEnemy)
+                    .addComponent(lblRounds)
+                    .addComponent(lblFormat)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(lblEnemy)
-                            .addComponent(lblRounds)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(45, 45, 45)
-                                .addComponent(jLabel2))
-                            .addComponent(lblFormat))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(26, 26, 26))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(76, 76, 76)
-                .addComponent(jButton3)
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,15 +170,9 @@ public class QuizOverview extends javax.swing.JFrame {
                         .addGap(26, 26, 26)
                         .addComponent(jLabel4))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
-                .addContainerGap(22, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -172,24 +198,42 @@ public class QuizOverview extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_formWindowClosed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnPendidikanCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPendidikanCategoryActionPerformed
+        try {
+            // 1
+            sendChoiceData(1);
+            this.panelKategori.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(QuizOverview.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnPendidikanCategoryActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void btnSainsCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSainsCategoryActionPerformed
+        try {
+            // 3
+            sendChoiceData(3);
+            this.panelKategori.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(QuizOverview.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnSainsCategoryActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnKesehatanCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKesehatanCategoryActionPerformed
+        try {
+            // 2
+            sendChoiceData(2);
+            this.panelKategori.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(QuizOverview.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnKesehatanCategoryActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public void showForm() {
 
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -200,14 +244,60 @@ public class QuizOverview extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnKesehatanCategory;
+    private javax.swing.JButton btnPendidikanCategory;
+    private javax.swing.JButton btnSainsCategory;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lblEnemy;
     private javax.swing.JLabel lblFormat;
     private javax.swing.JLabel lblRounds;
+    private javax.swing.JPanel panelKategori;
     // End of variables declaration//GEN-END:variables
+
+    public void chooseCategory() {
+        panelKategori.setVisible(true);
+    }
+    
+    private void sendData(Object data) throws IOException {
+        GameServerConnection connection = GameServerConnection.getInstance();
+        ObjectOutputStream oos = connection.getOos();
+        
+        oos.writeObject(data);
+        oos.reset();
+    }
+    
+    private void sendChoiceData(int choice) throws IOException {
+        ChoiceData data = new ChoiceData(choice);
+        this.sendData(data);
+    }
+    
+    public void showQuiz(QuizData data) throws IOException {
+        String[] choices = data.getChoices();
+        String question = data.getQuestion();
+        int quizNumber = data.getQuizNumber();
+        int response = JOptionPane.showOptionDialog(
+                null, 
+                question, 
+                "Quiz number: " + quizNumber + " Vs " + enemyUsername,
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null, 
+                choices, 
+                choices[0]);
+        
+        this.sendQuestionAnswer(response);
+    }
+
+    private void sendQuestionAnswer(int answer) throws IOException {
+        QuizAnswer data = new QuizAnswer(answer);
+        this.sendData(data);
+    }
+    
+    public void endQuiz(EndQuizData data) {
+        Credentials me = Credentials.getInstance();
+        QuizResult formResult = new QuizResult(this, me.getUsername(), enemyUsername, data);
+        formResult.showForm();
+    }
 }

@@ -12,7 +12,11 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import object.ChoiceData;
+import object.EndQuizData;
 import object.MapData;
+import object.QuizAnswer;
+import object.QuizData;
 import object.RequestMapData;
 import object.RequestMove;
 import object.RequestSetUsername;
@@ -50,6 +54,10 @@ class GameThread implements Runnable {
                     this.responseMap((RequestMapData) obj);
                 } else if (obj instanceof RequestMove) {
                     this.movePerson((RequestMove) obj);
+                } else if (obj instanceof ChoiceData) {
+                    this.setCategory((ChoiceData) obj);
+                } else if (obj instanceof QuizAnswer) {
+                    this.answering((QuizAnswer) obj);
                 }
             } catch (IOException ex) {
                 this.connectionOk = false;
@@ -88,6 +96,31 @@ class GameThread implements Runnable {
     
     public void responseStartQuiz(StartQuizData data) throws IOException {
         this.oos.writeObject(data);
+        this.oos.reset();
+    }
+
+    public void responseChoiceData(int i) throws IOException {
+        this.oos.writeObject(new ChoiceData(i));
+        this.oos.reset();
+    }
+
+    public void responseQuestion(QuizData quizData) throws IOException {
+        this.oos.writeObject(quizData);
+        this.oos.reset();
+    }
+
+    private void setCategory(ChoiceData choiceData) throws IOException {
+        int choice = choiceData.getChoiceData();
+        InGameUsers.updateCategory(this.me.getUsername(), choice);
+    }
+
+    private void answering(QuizAnswer quizAnswer) throws IOException {
+        int answer = quizAnswer.getAnswer();
+        InGameUsers.answering(this.me.getUsername(), answer);
+    }
+
+    public void responseEndQuizData(EndQuizData endQuizData) throws IOException {
+        this.oos.writeObject(endQuizData);
         this.oos.reset();
     }
 }

@@ -71,8 +71,11 @@ public class PlayingUsers {
     }
     
     public static void setInactive(String username) throws IOException {
-        getPlayingUsers().remove(username);
-       
+        playingUsers.remove(username);
+        removeFromMap(username);
+    }
+    
+    private static void removeFromMap(String username) throws IOException {
         boolean flag = false;
         for (int i=0; i<dimension; i++) {
             for (int j=0; j<dimension; j++) {
@@ -147,13 +150,21 @@ public class PlayingUsers {
             } else {
                 if (!enemyUsername.isEmpty()) {
                     synchronized (lock) {
+                        GameId gameId = new GameId(username, enemyUsername, 1);
                         GameThread a = PlayingUsers.getUser(username);
                         GameThread b = PlayingUsers.getUser(enemyUsername);
                         a.responseStartQuiz(new StartQuizData(enemyUsername, 4));
                         b.responseStartQuiz(new StartQuizData(username, 4));
                         
-                        PlayingUsers.setInactive(username);
-                        PlayingUsers.setInactive(enemyUsername);
+                        InGameUsers.addUser(username, gameId);
+                        InGameUsers.addUser(enemyUsername, gameId);
+                        
+                        InGameUsers.addGame(gameId, new GameData(4));
+                        
+                        a.responseChoiceData(-1);
+                        
+                        removeFromMap(username);
+                        removeFromMap(enemyUsername);
                     }
                 }
             }

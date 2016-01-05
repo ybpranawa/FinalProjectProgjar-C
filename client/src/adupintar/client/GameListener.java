@@ -13,7 +13,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import object.ChatMessage;
+import object.ChoiceData;
+import object.EndQuizData;
 import object.MapData;
+import object.QuizData;
 import object.StartQuizData;
 
 /**
@@ -25,6 +28,7 @@ class GameListener implements Runnable {
     private Map<String, Chat> chatWith;
     private int dimension;
     private Play form;
+    private QuizOverview quizForm;
     
     public GameListener(int dimension, Play form) {
         this.connectionOk = true;
@@ -51,6 +55,12 @@ class GameListener implements Runnable {
                     }
                 } else if (obj instanceof StartQuizData) {
                     this.Quiz((StartQuizData) obj);
+                } else if (obj instanceof ChoiceData) {
+                    this.quizForm.chooseCategory();
+                } else if (obj instanceof QuizData) {
+                    this.quizForm.showQuiz((QuizData) obj);
+                } else if (obj instanceof EndQuizData) {
+                    quizForm.endQuiz((EndQuizData) obj);
                 }
             }
         } catch (IOException ex) {
@@ -76,6 +86,7 @@ class GameListener implements Runnable {
     private void Quiz(StartQuizData data) {
         QuizOverview overviewForm = new QuizOverview(data.getEnemyUsername(), data.getRound(), form);
         form.setVisible(false);
+        this.quizForm = overviewForm;
         overviewForm.showForm();
     }
 }

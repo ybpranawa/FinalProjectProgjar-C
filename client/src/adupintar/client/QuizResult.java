@@ -5,17 +5,42 @@
  */
 package adupintar.client;
 
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+import object.EndQuizData;
+
 /**
  *
  * @author fendy
  */
 public class QuizResult extends javax.swing.JFrame {
 
+    private QuizOverview parent;
+    
     /**
      * Creates new form QuizResut
      */
-    public QuizResult() {
+    public QuizResult(QuizOverview parent, String me, String enemy, EndQuizData data) {
         initComponents();
+        
+        this.parent = parent;
+        lblUsername.setText(me + " - " + enemy);
+        String[] questions = data.getQuestions();
+        String[] answers = data.getAnswers();
+        lblQuestion1.setText(questions[0]);
+        lblQuestion2.setText(questions[1]);
+        lblQuestion3.setText(questions[2]);
+        lblQuestion4.setText(questions[3]);
+        
+        lblAnswer1.setText(answers[0]);
+        lblAnswer2.setText(answers[1]);
+        lblAnswer3.setText(answers[2]);
+        lblAnswer4.setText(answers[3]);
+        if (data.isStatus()) {
+            lblWinner.setText(me);
+        } else {
+            lblWinner.setText(enemy);
+        }
     }
 
     /**
@@ -27,117 +52,117 @@ public class QuizResult extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        checkBoxYou1 = new javax.swing.JCheckBox();
-        checkBoxYou2 = new javax.swing.JCheckBox();
-        checkBoxYou3 = new javax.swing.JCheckBox();
-        checkBoxEnemy1 = new javax.swing.JCheckBox();
-        checkBoxEnemy2 = new javax.swing.JCheckBox();
-        checkBoxEnemy3 = new javax.swing.JCheckBox();
+        lblUsername = new javax.swing.JLabel();
+        lblQuestion1 = new javax.swing.JLabel();
+        lblQuestion2 = new javax.swing.JLabel();
+        lblQuestion3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         lblWinner = new javax.swing.JLabel();
+        lblAnswer1 = new javax.swing.JLabel();
+        lblAnswer2 = new javax.swing.JLabel();
+        lblAnswer3 = new javax.swing.JLabel();
+        lblAnswer4 = new javax.swing.JLabel();
+        lblQuestion4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
-        jLabel1.setText("You - Username");
+        lblUsername.setText("You - Username");
 
-        jLabel2.setText("Enemy - Username");
+        lblQuestion1.setText("Question 1");
 
-        jLabel3.setText("Question 1");
+        lblQuestion2.setText("Question 2");
 
-        jLabel4.setText("Question 2");
-
-        jLabel5.setText("Question 3");
-
-        checkBoxYou1.setEnabled(false);
-
-        checkBoxYou2.setEnabled(false);
-
-        checkBoxYou3.setEnabled(false);
-
-        checkBoxEnemy1.setEnabled(false);
-
-        checkBoxEnemy2.setEnabled(false);
-
-        checkBoxEnemy3.setEnabled(false);
+        lblQuestion3.setText("Question 3");
 
         jLabel6.setText("Adu Result");
 
         lblWinner.setText("Winner : username");
+
+        lblAnswer1.setText("Answer 1");
+
+        lblAnswer2.setText("Answer 2");
+
+        lblAnswer3.setText("Answer 3");
+
+        lblAnswer4.setText("Answer 4");
+
+        lblQuestion4.setText("Question 4");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(97, 97, 97)
-                        .addComponent(jLabel1))
+                        .addComponent(lblQuestion4)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel6))
-                                .addGap(51, 51, 51)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(checkBoxYou2)
-                                    .addComponent(checkBoxYou3)
-                                    .addComponent(checkBoxYou1)))
-                            .addComponent(lblWinner))))
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
+                        .addComponent(lblWinner)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkBoxEnemy1)
-                            .addComponent(checkBoxEnemy2)
-                            .addComponent(checkBoxEnemy3))))
-                .addContainerGap(31, Short.MAX_VALUE))
+                            .addComponent(lblQuestion2)
+                            .addComponent(lblQuestion3)
+                            .addComponent(lblQuestion1)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblAnswer1)
+                                    .addComponent(lblAnswer2)
+                                    .addComponent(lblAnswer3)
+                                    .addComponent(lblAnswer4))
+                                .addGap(57, 57, 57))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblUsername)
+                                .addGap(43, 43, 43))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUsername))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblQuestion1)
+                    .addComponent(lblAnswer1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(checkBoxYou1)
-                    .addComponent(checkBoxEnemy1))
+                    .addComponent(lblQuestion2)
+                    .addComponent(lblAnswer2))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(checkBoxYou2)
-                    .addComponent(checkBoxEnemy2))
+                    .addComponent(lblQuestion3)
+                    .addComponent(lblAnswer3))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(checkBoxYou3)
-                    .addComponent(checkBoxEnemy3))
+                    .addComponent(lblQuestion4)
+                    .addComponent(lblAnswer4))
                 .addGap(18, 18, 18)
                 .addComponent(lblWinner)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void showForm() {
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        parent.dispose();
+    }//GEN-LAST:event_formWindowClosed
 
+    public void showForm() {
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -147,18 +172,16 @@ public class QuizResult extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox checkBoxEnemy1;
-    private javax.swing.JCheckBox checkBoxEnemy2;
-    private javax.swing.JCheckBox checkBoxEnemy3;
-    private javax.swing.JCheckBox checkBoxYou1;
-    private javax.swing.JCheckBox checkBoxYou2;
-    private javax.swing.JCheckBox checkBoxYou3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel lblAnswer1;
+    private javax.swing.JLabel lblAnswer2;
+    private javax.swing.JLabel lblAnswer3;
+    private javax.swing.JLabel lblAnswer4;
+    private javax.swing.JLabel lblQuestion1;
+    private javax.swing.JLabel lblQuestion2;
+    private javax.swing.JLabel lblQuestion3;
+    private javax.swing.JLabel lblQuestion4;
+    private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblWinner;
     // End of variables declaration//GEN-END:variables
 }
