@@ -6,6 +6,11 @@
 package adupintarserver;
 
 import java.io.IOException;
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Random;
 import object.EndQuizData;
 import object.QuizData;
 
@@ -14,7 +19,7 @@ import object.QuizData;
  * @author Fendy
  */
 public class GameData {
-    private int turn, aScore, bScore, rounds;
+    private int turn, aScore, bScore, rounds, categoryId;
     private String[] category, questions, answers, aAns, bAns;
     private String[] choices;
     private int[] scoreList;
@@ -24,6 +29,8 @@ public class GameData {
        this.turn = 0;
        this.aScore = 0;
        this.bScore = 0;
+       this.choices = new String[rounds];
+       this.scoreList = new int[rounds];
        this.category = new String[rounds];
        this.questions = new String[rounds];
        this.answers = new String[rounds];
@@ -63,7 +70,7 @@ public class GameData {
     /**
      * @param categoryId the categoryId to set
      */
-    public void setCategory(int categoryId) {
+    public void setCategory(int categoryId) throws SQLException {
         String category = "";
         if (categoryId == 1) {
             category = "Pendidikan";
@@ -72,7 +79,7 @@ public class GameData {
         } else if (categoryId == 3) {
             category = "Sains";
         }
-        
+        this.categoryId = categoryId;
         this.category[turn/2] = category;
         this.setQuestion();
     }
@@ -85,13 +92,35 @@ public class GameData {
         b.responseQuestion(new QuizData(this.questions[turn/2], choices, (turn/2)+1));
     }
     
-    private void setQuestion() {
-        this.questions[turn/2] = "test";
-        this.answers[turn/2] = "ansTest";
-        int[] dum = {1,0,0,0};
-        this.scoreList = dum;
-        String[] dumm = {"benar", "salah", "salah", "salah"};
-        this.choices = dumm;
+    private void setQuestion() throws SQLException {
+        Random rand = new Random();
+        
+        DbConnect db = DbConnect.getDbCon();
+        ArrayList<String> args = new ArrayList<>();
+        args.add(Integer.toString(categoryId));
+        String query = "SELECT id_soal, pertanyaan FROM soal WHERE id_kategori=?";
+        ResultSet rs = db.query(query, args);
+        rs.last();
+        int idx = rand.nextInt(rs.getRow());
+        rs.beforeFirst();
+        for (int i=0;i<=idx;i++)rs.next();
+        this.questions[turn/2] = (String)rs.getString("pertanyaan");
+        
+        args.clear();
+        args.add((String)rs.getString("id_soal"));
+        args.add(Integer.toString(categoryId));
+        query = "SELECT jawab, score FROM jawaban WHERE id_soal=? AND id_kategori=?";
+        rs = db.query(query, args);
+        int i=0;
+        while (rs.next()) {
+            System.out.println(i + " " + rs.getString("jawab") + " " + rs.getString("score"));
+            if (rs.getString("score").equals("1")) {
+                this.answers[turn/2] = rs.getString("jawab");
+            }
+            this.choices[i] = rs.getString("jawab");
+            this.scoreList[i] = Integer.parseInt(rs.getString("score"));
+            i++;
+        }
     }
     
     private boolean isWinner(int idx) {
