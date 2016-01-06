@@ -21,6 +21,7 @@ public class EndQuizData implements Serializable {
         this.questions = questions;
         this.answers = answers;
         this.score = score;
+        this.status = status;
     }
 
     /**

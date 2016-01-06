@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/Kuliah/progjar/FinalProjectProgjar-C/server/src/adupintarserver/GameId.java</file>
+            <file>file:/D:/Kuliah/progjar/FinalProjectProgjar-C/server/src/adupintarserver/AduPintarServer.java</file>
+            <file>file:/D:/Kuliah/progjar/FinalProjectProgjar-C/server/src/adupintarserver/ActiveUsers.java</file>
             <file>file:/D:/Kuliah/progjar/FinalProjectProgjar-C/server/src/adupintarserver/GameData.java</file>
+            <file>file:/D:/Kuliah/progjar/FinalProjectProgjar-C/server/src/adupintarserver/ChatThread.java</file>
+            <file>file:/D:/Kuliah/progjar/FinalProjectProgjar-C/server/src/adupintarserver/GameThread.java</file>
+            <file>file:/D:/Kuliah/progjar/FinalProjectProgjar-C/server/src/adupintarserver/InGameUsers.java</file>
         </group>
     </open-files>
 </project-private>

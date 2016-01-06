@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,6 +69,8 @@ class GameThread implements Runnable {
                 }
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(GameThread.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -109,7 +112,7 @@ class GameThread implements Runnable {
         this.oos.reset();
     }
 
-    private void setCategory(ChoiceData choiceData) throws IOException {
+    private void setCategory(ChoiceData choiceData) throws IOException, SQLException {
         int choice = choiceData.getChoiceData();
         InGameUsers.updateCategory(this.me.getUsername(), choice);
     }

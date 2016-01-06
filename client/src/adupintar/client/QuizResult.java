@@ -37,10 +37,11 @@ public class QuizResult extends javax.swing.JFrame {
         lblAnswer3.setText(answers[2]);
         lblAnswer4.setText(answers[3]);
         if (data.isStatus()) {
-            lblWinner.setText(me);
+            lblWinner.setText("Winner: " + me);
         } else {
-            lblWinner.setText(enemy);
+            lblWinner.setText("Winner: " + enemy);
         }
+        lblYourScore.setText("Your score: " + data.getScore());
     }
 
     /**
@@ -63,6 +64,7 @@ public class QuizResult extends javax.swing.JFrame {
         lblAnswer3 = new javax.swing.JLabel();
         lblAnswer4 = new javax.swing.JLabel();
         lblQuestion4 = new javax.swing.JLabel();
+        lblYourScore = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -93,6 +95,8 @@ public class QuizResult extends javax.swing.JFrame {
 
         lblQuestion4.setText("Question 4");
 
+        lblYourScore.setText("Your score : score");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -104,15 +108,12 @@ public class QuizResult extends javax.swing.JFrame {
                         .addComponent(lblQuestion4)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblWinner)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblQuestion2)
                             .addComponent(lblQuestion3)
                             .addComponent(lblQuestion1)
                             .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,7 +124,12 @@ public class QuizResult extends javax.swing.JFrame {
                                 .addGap(57, 57, 57))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(lblUsername)
-                                .addGap(43, 43, 43))))))
+                                .addGap(43, 43, 43))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblWinner)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblYourScore)
+                        .addGap(32, 32, 32))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +155,9 @@ public class QuizResult extends javax.swing.JFrame {
                     .addComponent(lblQuestion4)
                     .addComponent(lblAnswer4))
                 .addGap(18, 18, 18)
-                .addComponent(lblWinner)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblWinner)
+                    .addComponent(lblYourScore))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
@@ -183,5 +191,6 @@ public class QuizResult extends javax.swing.JFrame {
     private javax.swing.JLabel lblQuestion4;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblWinner;
+    private javax.swing.JLabel lblYourScore;
     // End of variables declaration//GEN-END:variables
 }

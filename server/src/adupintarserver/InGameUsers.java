@@ -6,6 +6,7 @@
 package adupintarserver;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class InGameUsers {
         games.put(id, data);
     }
     
-    public static void updateCategory(String username, int category) throws IOException {
+    public static void updateCategory(String username, int category) throws IOException, SQLException {
         GameId gid = userGame.get(username);
         GameData gd = games.get(gid);
         

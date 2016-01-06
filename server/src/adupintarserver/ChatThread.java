@@ -85,9 +85,9 @@ public class ChatThread implements Runnable {
         } else {
             ChatThread ct = ActiveUsers.getUser(destUsername);
             if (ct != null) {
-                ct.SendMessage(new ChatMessage(fromUsername, destUsername, AddTimestamp(fromUsername, message)));
+                ct.SendMessage(new ChatMessage(destUsername, fromUsername, AddTimestamp(fromUsername, message)));
             } else {
-                this.oos.writeObject(new ChatMessage(destUsername, fromUsername, AddTimestamp("Server", destUsername + " is currently offline!\n")));
+                this.oos.writeObject(new ChatMessage(fromUsername, destUsername, AddTimestamp("Server", destUsername + " is currently offline!\n")));
                 this.oos.reset();
             }
         }
