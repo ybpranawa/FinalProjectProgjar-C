@@ -113,7 +113,7 @@ public class GameData {
         rs = db.query(query, args);
         int i=0;
         while (rs.next()) {
-            System.out.println(i + " " + rs.getString("jawab") + " " + rs.getString("score"));
+            //System.out.println(i + " " + rs.getString("jawab") + " " + rs.getString("score"));
             if (rs.getString("score").equals("1")) {
                 this.answers[turn/2] = rs.getString("jawab");
             }

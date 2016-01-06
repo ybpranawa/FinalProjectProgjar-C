@@ -15,6 +15,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import object.*;
@@ -51,8 +52,6 @@ public class ChatThread implements Runnable {
             } catch (IOException ex) {
                 this.connectionOk = false;
                 ActiveUsers.setInactive(this.me.getUsername());
-                //System.out.println("lala");
-                //Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -71,17 +70,26 @@ public class ChatThread implements Runnable {
     
     private void ChatHandler(ChatMessage msg) throws IOException {
         String fromUsername = this.me.getUsername();
-        String destUsername = msg.getFriendUsername();
+        String destUsername = msg.getTo();
         String message = msg.getMessage();
         
-        this.oos.writeObject(new ChatMessage(destUsername, AddTimestamp("You", message)));
+        this.oos.writeObject(new ChatMessage(fromUsername, destUsername, AddTimestamp("You", message)));
         
-        ChatThread ct = ActiveUsers.getUser(destUsername);
-        if (ct != null) {
-            ct.SendMessage(new ChatMessage(fromUsername, AddTimestamp(fromUsername, message)));
+        if (destUsername.equals("")) {
+            ChatMessage data = new ChatMessage(fromUsername, destUsername, AddTimestamp(fromUsername, message));
+            for (Map.Entry<String, ChatThread> entry : ActiveUsers.getActiveUsers().entrySet()) {
+                if (!entry.getKey().equals(fromUsername)) {
+                    entry.getValue().SendMessage(data);
+                }
+            }
         } else {
-            this.oos.writeObject(new ChatMessage(destUsername, AddTimestamp("Server", destUsername + " is currently offline!\n")));
-            this.oos.reset();
+            ChatThread ct = ActiveUsers.getUser(destUsername);
+            if (ct != null) {
+                ct.SendMessage(new ChatMessage(fromUsername, destUsername, AddTimestamp(fromUsername, message)));
+            } else {
+                this.oos.writeObject(new ChatMessage(destUsername, fromUsername, AddTimestamp("Server", destUsername + " is currently offline!\n")));
+                this.oos.reset();
+            }
         }
     }
     

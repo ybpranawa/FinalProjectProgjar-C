@@ -26,12 +26,14 @@ public class Chat extends javax.swing.JFrame {
     
     /**
      * Creates new form Chat
+     * @param friendUsername
+     * @param listener
      */
     public Chat(String friendUsername, ChatListener listener) {
         initComponents();
         
         this.friendUsername = friendUsername;
-        this.setChatWith(friendUsername);
+        this.setChatWith(friendUsername.equals("") ? "PUBLIC" : friendUsername);
         
         this.listener = listener;
         this.listener.addChatWith(friendUsername, this);
@@ -125,7 +127,7 @@ public class Chat extends javax.swing.JFrame {
             ChatServerConnection connection = ChatServerConnection.getInstance();
             ObjectOutputStream oos = connection.getOos();
             
-            oos.writeObject(new ChatMessage(this.friendUsername, message));
+            oos.writeObject(new ChatMessage(Credentials.getInstance().getUsername(), this.friendUsername, message));
             oos.reset();
             
             txtBoxChatToSend.setText("");

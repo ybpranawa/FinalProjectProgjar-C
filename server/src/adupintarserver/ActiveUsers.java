@@ -7,6 +7,7 @@ package adupintarserver;
 
 import java.util.Hashtable;
 import java.util.Map;
+import object.ChatMessage;
 
 /**
  *
@@ -14,6 +15,10 @@ import java.util.Map;
  */
 public class ActiveUsers {
     private static Map<String, ChatThread> activeUsers = null;
+    
+    public static Map<String, ChatThread> getActiveUsers() {
+        return activeUsers;
+    }
     
     private ActiveUsers() {
         ActiveUsers.activeUsers = new Hashtable<>();

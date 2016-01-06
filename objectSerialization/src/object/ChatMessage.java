@@ -12,19 +12,21 @@ import java.io.Serializable;
  * @author fendy
  */
 public class ChatMessage implements Serializable {
-    private String friendUsername;
+    private String from;
+    private String to;
     private String message;
     
-    public ChatMessage(String friendUsername, String message) {
-        this.friendUsername = friendUsername;
+    public ChatMessage(String from, String to, String message) {
+        this.from = from;
+        this.to = to;
         this.message = message;
     }
 
     /**
-     * @return the friendUsername
+     * @return the to
      */
-    public String getFriendUsername() {
-        return friendUsername;
+    public String getTo() {
+        return to;
     }
 
     /**
@@ -32,6 +34,13 @@ public class ChatMessage implements Serializable {
      */
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * @return the from
+     */
+    public String getFrom() {
+        return from;
     }
     
 }

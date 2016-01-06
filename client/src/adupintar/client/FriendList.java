@@ -127,6 +127,7 @@ public class FriendList extends javax.swing.JFrame {
             if (r != null && r.contains(evt.getPoint())) {
                 int idx = listFriends.locationToIndex(evt.getPoint());
                 String friendUsername = (String) listFriends.getModel().getElementAt(idx);
+                if (idx == 0) friendUsername = "";
                 Chat chatWindow = new Chat(friendUsername, Manager.getChatListener());
                 chatWindow.showForm();
             }
@@ -192,6 +193,7 @@ public class FriendList extends javax.swing.JFrame {
     private void loadFriendData() throws IOException, ClassNotFoundException {
         DefaultListModel model = new DefaultListModel();
         listFriends.setModel(model);
+        model.addElement("PUBLIC");
         
         ServerConnection connection = ServerConnection.getInstance();
         if (connection != null) {

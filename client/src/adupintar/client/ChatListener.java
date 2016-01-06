@@ -36,17 +36,22 @@ public class ChatListener implements Runnable {
             
             while (this.connectionOk) {
                 ChatMessage msg = (ChatMessage) ois.readObject();
-                String friendUsername = msg.getFriendUsername();
+                String friendUsername = msg.getTo();
                 String message = msg.getMessage();
                 
-                if (!this.chatWith.containsKey(friendUsername)) {
-                    Chat chatForm = new Chat(friendUsername, this);
-                    this.chatWith.put(friendUsername, chatForm);
-                    chatForm.showForm();
+                if (!msg.getTo().equals("")) {
+                    if (!this.chatWith.containsKey(friendUsername)) {
+                        Chat chatForm = new Chat(friendUsername, this);
+                        this.chatWith.put(friendUsername, chatForm);
+                        chatForm.showForm();
+                    }
                 }
                 
                 Chat friendForm = this.chatWith.get(friendUsername);
-                friendForm.appendMessage(message);
+                if (friendForm != null) {
+                    friendForm.appendMessage(message);
+                }
+                
             }
         } catch (IOException ex) {
             this.connectionOk = false;
